@@ -1,4 +1,5 @@
 
+import groovy.json.JsonSlurper
 
 node {
     print currentBuild.getStartTimeInMillis() 
@@ -21,7 +22,12 @@ node {
 	imported.example1()
 
 	imported.example2()
-    
+
+
+	//Slurper
+    def json = new JsonSlurper().parseText(env.someJson);
+
+	print json.test
 }
 
 def DoGame(String gameName) {
