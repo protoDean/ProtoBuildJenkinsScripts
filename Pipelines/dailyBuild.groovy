@@ -1,14 +1,16 @@
 node{
 
-        def buildProfile = "iosRelease"
+		final PROFILE_IOS_RELEASE = "iosRelease"
+		final PROFILE_IOS_DEBUG = "iosDebug"
+		final PROFILE_ANDROID_DEBUG = "googleDebugApk"
+		final PROFILE_ANDROID_RELEASE = "googleRelease"
+
         def projectFolder = env.projectFolder
         def sourceBranch = "default"
         
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber
        
-        buildProfile = "iosRelease"
-
         //final DAILY_BUILD_TEMP = "DailyBuildTemp" + currentBuild.getStartTimeInMillis() 
         //def dailyBuildFolder = DAILY_BUILD_TEMP
         //ef buildPath = "../DailyBuilds/"+ DAILY_BUILD_TEMP
@@ -26,7 +28,7 @@ node{
         stage("ReleaseBuildIos" + projectFolder) {
     
             def finalBuildResult = build job: 'IosReleaseBuild', parameters: commonParams + [
-                [$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
+                [$class: 'StringParameterValue', name: 'buildProfile', value: PROFILE_IOS_RELEASE] 
                 ], propagate: false, wait: true
                 
                 
@@ -44,7 +46,7 @@ node{
         stage("DebugBuildIos" + projectFolder) {
       
             build job: 'IosDevBuild', parameters: commonParams + [
-                [$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
+                [$class: 'StringParameterValue', name: 'buildProfile', value: PROFILE_IOS_DEBUG],
                 [$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
                 ], propagate: false, wait: true
         }
@@ -57,7 +59,7 @@ node{
          stage("DevBuildAndroid" + projectFolder) {
     
             def finalBuildResult = build job: 'AndroidDevBuild', parameters: commonParams + [
-                [$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
+                [$class: 'StringParameterValue', name: 'buildProfile', value: PROFILE_ANDROID_DEBUG] 
                 ], propagate: false, wait: true
                 
                 
@@ -75,7 +77,7 @@ node{
         stage("ReleaseBuildAndroid" + projectFolder) {
       
             build job: 'AndroidDevBuild', parameters: commonParams + [
-                [$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
+                [$class: 'StringParameterValue', name: 'buildProfile', value: PROFILE_ANDROID_RELEASE],
                 [$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
                 ], propagate: false, wait: true
         }

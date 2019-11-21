@@ -1,3 +1,6 @@
+
+
+
 node {
     print currentBuild.getStartTimeInMillis() 
     print currentBuild.number
@@ -12,6 +15,11 @@ node {
     //THis lets us get the variables used in this build. Will be handy.
     //def j1EnvVariables = finalBuildResult.getBuildVariables();
     //print "${j1EnvVariables}" 
+    DoGame("Foobie")
     
-    
+}
+
+def DoGame(String gameName) {
+        
+        echo "It WOrks " + gameName 
 }
