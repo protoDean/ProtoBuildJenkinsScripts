@@ -1,9 +1,4 @@
-node{
-	def sourceBranch = "default"
-	DoGame(env.projectFolder , sourceBranch);
-}
-
-def DoGame(String projectFolder , String sourceBranch) {
+def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersion) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -21,7 +16,7 @@ def DoGame(String projectFolder , String sourceBranch) {
             [$class: 'StringParameterValue', name: 'projectFolder', value: projectFolder],
             [$class: 'StringParameterValue', name: 'outputFolder', value: outputFolder] ,
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
-            [$class: 'StringParameterValue', name: 'unityVersion', value: unityVersion],
+            [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
             [$class: 'StringParameterValue', name: 'buildPath', value: buildPath]
             ]
         
@@ -66,3 +61,5 @@ def DoGame(String projectFolder , String sourceBranch) {
         //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
         //Upload Release build if neccessary.
 }
+
+return this
