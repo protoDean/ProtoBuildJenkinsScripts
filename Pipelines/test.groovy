@@ -16,7 +16,7 @@ node {
     //print "${j1EnvVariables}" 
     DoGame("Foobie")
 
-	def imported = load 'testImport.groovy'
+	def imported = load("testImport.groovy")
 	imported.example1()
 
 	imported.example2()
