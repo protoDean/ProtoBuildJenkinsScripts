@@ -1,5 +1,5 @@
 
-
+final PROFILE_IOS_RELEASE = "Outside Define"
 
 node {
     print currentBuild.getStartTimeInMillis() 
@@ -21,5 +21,19 @@ node {
 
 def DoGame(String gameName) {
         
-        echo "It WOrks " + gameName 
+		stage("Stage 1")
+		{
+        	echo "It WOrks " + gameName 
+		}
+
+		stage("Stage 2")
+		{
+        	echo "Yeay" 
+		}
+
+		stage("Stage 2")
+		{
+        	echo PROFILE_IOS_RELEASE 
+		}
+
 }
