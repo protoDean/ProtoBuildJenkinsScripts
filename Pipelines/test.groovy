@@ -17,7 +17,7 @@ node {
     DoGame("Foobie")
 
 	print pwd()
-	def imported = load("testImport.groovy")
+	def imported = load(pwd() + "@script/Pipelines/testImport.groovy")
 	imported.example1()
 
 	imported.example2()
