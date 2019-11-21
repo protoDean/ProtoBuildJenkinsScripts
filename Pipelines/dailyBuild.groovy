@@ -6,15 +6,14 @@ node{
         
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber
-        def outputFolder
-        
-        
+       
         buildProfile = "iosRelease"
-        outputFolder =  "${projectFolder}Daily"
+
         //final DAILY_BUILD_TEMP = "DailyBuildTemp" + currentBuild.getStartTimeInMillis() 
         //def dailyBuildFolder = DAILY_BUILD_TEMP
         //ef buildPath = "../DailyBuilds/"+ DAILY_BUILD_TEMP
 		def buildPath = "../DailyBuilds/DailyBuild" + currentBuild.number
+		def outputFolder =  "Daily/${projectFolder}Daily" +  currentBuild.number
         
         def commonParams = [
             [$class: 'StringParameterValue', name: 'projectFolder', value: projectFolder],
