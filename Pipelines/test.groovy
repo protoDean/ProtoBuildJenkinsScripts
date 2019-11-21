@@ -15,6 +15,11 @@ node {
     //def j1EnvVariables = finalBuildResult.getBuildVariables();
     //print "${j1EnvVariables}" 
     DoGame("Foobie")
+
+	def imported = load 'testImport.groovy'
+	imported.example1()
+
+	imported.example2()
     
 }
 

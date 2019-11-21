@@ -1,19 +1,19 @@
 node{
+	def sourceBranch = "default"
+	DoGame(env.projectFolder , sourceBranch);
+}
 
-		final PROFILE_IOS_RELEASE = "iosRelease"
-		final PROFILE_IOS_DEBUG = "iosDebug"
-		final PROFILE_ANDROID_DEBUG = "googleDebugApk"
-		final PROFILE_ANDROID_RELEASE = "googleRelease"
-
-        def projectFolder = env.projectFolder
-        def sourceBranch = "default"
+def DoGame(String projectFolder , String sourceBranch) {
         
+   	final PROFILE_IOS_RELEASE = "iosRelease"
+	final PROFILE_IOS_DEBUG = "iosDebug"
+	final PROFILE_ANDROID_DEBUG = "googleDebugApk"
+	final PROFILE_ANDROID_RELEASE = "googleRelease"
+
+       
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber
        
-        //final DAILY_BUILD_TEMP = "DailyBuildTemp" + currentBuild.getStartTimeInMillis() 
-        //def dailyBuildFolder = DAILY_BUILD_TEMP
-        //ef buildPath = "../DailyBuilds/"+ DAILY_BUILD_TEMP
 		def buildPath = "../DailyBuilds/DailyBuild" + currentBuild.number
 		def outputFolder =  "Daily/${projectFolder}Daily" +  currentBuild.number
         
@@ -33,16 +33,9 @@ node{
                 
                 
             finalBuildNumber = "" + finalBuildResult.number
-            
-            //def finalBuildCompletePath = finalBuildResult.getBuildVariables().WORKSPACE + "/" + dailyBuildFolder
-            //dailyBuildFolder =  "DailyBuild" + finalBuildNumber
-            
-            //sh "echo ${dailyBuildFolder}"
-
         }
         
-        buildProfile = "iosDebug"
-            
+  
         stage("DebugBuildIos" + projectFolder) {
       
             build job: 'IosDevBuild', parameters: commonParams + [
@@ -50,12 +43,7 @@ node{
                 [$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
                 ], propagate: false, wait: true
         }
-        
-        //rename folder
-        //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
-        //Upload Release build if neccessary.
-        
-         buildProfile = "googleDebugApk"
+    
          stage("DevBuildAndroid" + projectFolder) {
     
             def finalBuildResult = build job: 'AndroidDevBuild', parameters: commonParams + [
@@ -64,16 +52,8 @@ node{
                 
                 
             finalBuildNumber = "" + finalBuildResult.number
-            
-            //def finalBuildCompletePath = finalBuildResult.getBuildVariables().WORKSPACE + "/" + dailyBuildFolder
-            //dailyBuildFolder =  "DailyBuild" + finalBuildNumber
-            
-            //sh "echo ${dailyBuildFolder}"
-
         }
         
-        buildProfile = "googleRelease"
-            
         stage("ReleaseBuildAndroid" + projectFolder) {
       
             build job: 'AndroidDevBuild', parameters: commonParams + [
@@ -85,5 +65,4 @@ node{
         //rename folder
         //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
         //Upload Release build if neccessary.
-    
 }
