@@ -1,4 +1,4 @@
-def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , Int buildLevel ) {
+def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , int buildLevel ) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -8,10 +8,10 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final TARGET_ANDROID = "Android"
 	final TARGET_IOS = "iOS"
 
-	final Int 	BUILD_NONE = 0 
-	final Int 	BUILD_DEBUG = 1
-	final Int 	BUILD_RELEASE = 2
-	final Int 	BUILD_RELEASE_UPLOAD = 3
+	final int 	BUILD_NONE = 0 
+	final int 	BUILD_DEBUG = 1
+	final int 	BUILD_RELEASE = 2
+	final int 	BUILD_RELEASE_UPLOAD = 3
 	
 
 	def wereFailures = false;
