@@ -12,6 +12,8 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final int 	BUILD_DEBUG = 1
 	final int 	BUILD_RELEASE = 2
 	final int 	BUILD_RELEASE_UPLOAD = 3
+
+
 	
 
 	def wereFailures = false;
@@ -37,7 +39,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		{
 			try
 			{
-				buildProfile = PROFILE_IOS_RELEASE
+				buildProfile = (target == TARGET_ANDROID ? PROFILE_ANDROID_RELEASE : PROFILE_IOS_RELEASE)
 				stage(buildProfile + projectFolder) {
 					
 					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
@@ -59,21 +61,21 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		{	
 			try
 			{
-				buildProfile = PROFILE_IOS_DEBUG
+				buildProfile =  (target == TARGET_ANDROID ? PROFILE_ANDROID_DEBUG : PROFILE_IOS_DEBUG)
 				stage(buildProfile + projectFolder) {
 			
-					var Params = commonParams + [
+					def buildParams = commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
 						
 
 					//override build num if we did a release
 					if(finalBuildNumber)
 					{
-						params = params + 
+						buildParams = params + 
 							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]]
 					}
 
-					build job: 'UnityBuild',  parameters: params, propagate: true, wait: true
+					build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
 				}
 			}
 			catch(e) {
