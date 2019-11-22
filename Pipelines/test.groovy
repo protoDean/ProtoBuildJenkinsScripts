@@ -28,6 +28,11 @@ node {
     def json = new JsonSlurper().parseText(env.someJson);
 
 	print json.test
+
+	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
+    String fileContent = file.text
+
+	print fileContent
 }
 
 def DoGame(String gameName) {
