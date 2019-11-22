@@ -25,7 +25,8 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
             [$class: 'StringParameterValue', name: 'outputFolder', value: outputFolder] ,
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
             [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
-            [$class: 'StringParameterValue', name: 'buildPath', value: buildPath]
+            [$class: 'StringParameterValue', name: 'buildPath', value: buildPath],
+			[$class: 'StringParameterValue', name: 'buildTarget', value: target] 
             ]
 		
 		def buildProfile 
@@ -38,8 +39,8 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				stage(buildProfile + projectFolder) {
 					
 					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
-						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] ,
-						[$class: 'StringParameterValue', name: 'buildTarget', value: target] 
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] 
+						
 						], propagate: true, wait: true
 						
 						
@@ -59,18 +60,18 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				buildProfile = PROFILE_IOS_DEBUG
 				stage(buildProfile + projectFolder) {
 			
-					var Params = parameters: commonParams + [
-						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
-						[$class: 'StringParameterValue', name: 'buildTarget', value: target] ]
+					var Params = commonParams + [
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
+						
 
 					//override build num if we did a release
 					if(finalBuildNumber)
 					{
 						params = params + 
-							[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
+							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]]
 					}
 
-					build job: 'UnityBuild', params, propagate: true, wait: true
+					build job: 'UnityBuild',  parameters: params, propagate: true, wait: true
 				}
 			}
 			catch(e) {
