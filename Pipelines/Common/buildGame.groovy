@@ -77,7 +77,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					//override build num if we did a release
 					if(finalBuildNumber)
 					{
-						buildParams = params + 
+						buildParams = buildParams + 
 							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]]
 					}
 
