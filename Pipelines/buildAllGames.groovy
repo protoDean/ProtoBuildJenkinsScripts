@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 node{
 	def dailyBuild = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
