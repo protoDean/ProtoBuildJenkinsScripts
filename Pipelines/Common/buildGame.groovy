@@ -52,7 +52,7 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 				buildProfile = PROFILE_IOS_DEBUG
 				stage(buildProfile + projectFolder) {
 			
-					build job: 'IosDevBuild', parameters: commonParams + [
+					build job: 'UnityBuild', parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
 						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] ,
 						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
@@ -71,7 +71,7 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 				buildProfile = PROFILE_ANDROID_DEBUG
 				stage(buildProfile + projectFolder) {
 			
-					def finalBuildResult = build job: 'AndroidDevBuild', parameters: commonParams + [
+					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
 						], propagate: true, wait: true
@@ -89,7 +89,7 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 				buildProfile = PROFILE_ANDROID_DEBUG
 				stage(buildProfile + projectFolder) {
 			
-					build job: 'AndroidDevBuild', parameters: commonParams + [
+					build job: 'UnityBuild', parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
 						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
 						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
