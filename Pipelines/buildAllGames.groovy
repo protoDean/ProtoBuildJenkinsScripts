@@ -8,21 +8,19 @@ node{
 
 	print "Using settings: " + file.text
 
-	if(dailyBuildSettings.games != null)
-	{
+	
 		for (game in dailyBuildSettings.games) 
 		{
 			print "Doing Game " + game.projectName
-			if(game.targets != null)
-			{
+			
 				for (target in game.targets) 
 				{	
 					print "Doing Target " + target.id
-					dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , game.target.id , game.target.buildLevel);
+					dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
 				}
-			}
+			
 		}
-	}
+	
 
 	//dailyBuild.DoGame("LawnMower" ,"default" , "2019.2.9f1");
 	//dailyBuild.DoGame("Starfish" , "default" ,"2019.1.14f1");
