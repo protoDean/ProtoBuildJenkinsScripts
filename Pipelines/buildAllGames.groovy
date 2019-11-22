@@ -6,10 +6,11 @@ node{
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	def dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 
-	for (game in dailyBuildSettings.games) {
-		if(game.buildDebug)
-   		{
-		   dailyBuild.DoGame(game.projectName , game.sourceBranch , game.unityVersion , game.targets);
+	for (game in dailyBuildSettings.games) 
+	{
+		for (target in game.targets) 
+		{	
+		   dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , game.target.id , game.target.buildLevel);
 		}
 	}
 

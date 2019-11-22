@@ -1,4 +1,4 @@
-def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersion , List<String> targets) {
+def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , Int buildLevel ) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -8,10 +8,14 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 	final TARGET_ANDROID = "Android"
 	final TARGET_IOS = "iOS"
 
+	enum BuildLevel{
+ 		NONE, DEBUG , RELEASE , RELEASE_UPLOAD
+	}
+
 	def wereFailures = false;
        
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
-        def finalBuildNumber
+        def finalBuildNumber = null
        
 		def buildPath = "../DailyBuilds/DailyBuild" + currentBuild.number
 		def outputFolder =  "Daily/${projectFolder}Daily" +  currentBuild.number
@@ -26,7 +30,7 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 		
 		def buildProfile 
         
-		if(targets.find { it == TARGET_IOS })
+		if(buildLevel >= BuildLevel.RELEASE)
 		{
 			try
 			{
@@ -35,28 +39,11 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 					
 					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] ,
-						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] 
+						[$class: 'StringParameterValue', name: 'buildTarget', value: target] 
 						], propagate: true, wait: true
 						
 						
 					finalBuildNumber = "" + finalBuildResult.number
-				}
-			}
-			catch(e) {
-				wereFailures = true
-				echo e.toString()  
-			}
-			
-			try
-			{
-				buildProfile = PROFILE_IOS_DEBUG
-				stage(buildProfile + projectFolder) {
-			
-					build job: 'UnityBuild', parameters: commonParams + [
-						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
-						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] ,
-						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
-						], propagate: true, wait: true
 				}
 			}
 			catch(e) {
@@ -65,35 +52,25 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 			}
 		}
 
-		if(targets.find { it == TARGET_ANDROID })
-		{
-			try{
-				buildProfile = PROFILE_ANDROID_DEBUG
+		if(buildLevel >= BuildLevel.DEBUG)
+		{	
+			try
+			{
+				buildProfile = PROFILE_IOS_DEBUG
 				stage(buildProfile + projectFolder) {
 			
-					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
-						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
-						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
-						], propagate: true, wait: true
-						
-						
-					finalBuildNumber = "" + finalBuildResult.number
-				}
-			}
-			catch(e) {
-				wereFailures = true
-				echo e.toString()  
-			}
-			
-			try{
-				buildProfile = PROFILE_ANDROID_DEBUG
-				stage(buildProfile + projectFolder) {
-			
-					build job: 'UnityBuild', parameters: commonParams + [
+					var Params = parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
-						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
-						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
-						], propagate: true, wait: true
+						[$class: 'StringParameterValue', name: 'buildTarget', value: target] ]
+
+					//override build num if we did a release
+					if(finalBuildNumber)
+					{
+						params = params + 
+							[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
+					}
+
+					build job: 'UnityBuild', params, propagate: true, wait: true
 				}
 			}
 			catch(e) {
@@ -101,6 +78,12 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 				echo e.toString()  
 			}
 		}
+
+		if(buildLevel >= BuildLevel.RELEASE_UPLOAD)
+		{
+			print("Uploading Build!");
+		}
+
         //rename folder
         //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
         //Upload Release build if neccessary.
