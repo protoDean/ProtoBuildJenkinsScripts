@@ -33,8 +33,6 @@ node {
 	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
 	env.someJson = "foobar"
-
-	print fileContent
 }
 
 def DoGame(String gameName) {
