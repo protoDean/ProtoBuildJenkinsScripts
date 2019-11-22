@@ -17,6 +17,13 @@ node{
 				{	
 					print "Doing Target " + target.id
 					dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
+
+					if(target.id == "Android")
+					{
+						//Get the build id. Copy it.
+						//mkdir -p ${OUTPUT_PATH}/${outputFolder}
+						//mv ${WORKSPACE}/${buildPath}/${unityBuildId} ${OUTPUT_PATH}/${outputFolder}/${unityBuildId}
+					}
 				}
 			
 		}
