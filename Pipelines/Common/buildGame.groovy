@@ -8,9 +8,9 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final TARGET_ANDROID = "Android"
 	final TARGET_IOS = "iOS"
 
-	enum BuildLevel{
- 		NONE, DEBUG , RELEASE , RELEASE_UPLOAD
-	}
+	final Int 
+ 		BUILD_NONE = 0 , BUILD_DEBUG = 1 , BUILD_RELEASE = 2 , BUILD_RELEASE_UPLOAD = 3
+	
 
 	def wereFailures = false;
        
@@ -31,7 +31,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		
 		def buildProfile 
         
-		if(buildLevel >= BuildLevel.RELEASE)
+		if(buildLevel >= BUILD_RELEASE)
 		{
 			try
 			{
@@ -53,7 +53,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 			}
 		}
 
-		if(buildLevel >= BuildLevel.DEBUG)
+		if(buildLevel >= BUILD_DEBUG)
 		{	
 			try
 			{
@@ -80,7 +80,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 			}
 		}
 
-		if(buildLevel >= BuildLevel.RELEASE_UPLOAD)
+		if(BUILD_RELEASE_UPLOAD)
 		{
 			print("Uploading Build!");
 		}
