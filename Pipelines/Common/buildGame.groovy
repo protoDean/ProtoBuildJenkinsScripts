@@ -34,13 +34,14 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
             ]
 		
 		def buildProfile 
+		def releaseBuildId = null
         
 		if(buildLevel >= BUILD_RELEASE)
 		{
 			try
 			{
 				buildProfile = (target == TARGET_ANDROID ? PROFILE_ANDROID_RELEASE : PROFILE_IOS_RELEASE)
-				stage(buildProfile + projectFolder) {
+				stage( projectFolder + "-" + buildProfile) {
 					
 					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] 
@@ -49,6 +50,11 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						
 						
 					finalBuildNumber = "" + finalBuildResult.number
+
+					def envVariables = finalBuildResult.getBuildVariables();
+    				//print "${j1EnvVariables}" 
+
+					releaseBuildId = envVariables.unityBuildId;
 				}
 			}
 			catch(e) {
@@ -62,7 +68,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 			try
 			{
 				buildProfile =  (target == TARGET_ANDROID ? PROFILE_ANDROID_DEBUG : PROFILE_IOS_DEBUG)
-				stage(buildProfile + projectFolder) {
+				stage(projectFolder + "-" + buildProfile) {
 			
 					def buildParams = commonParams + [
 						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
@@ -84,9 +90,28 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 			}
 		}
 
-		if(BUILD_RELEASE_UPLOAD)
+		if(buildLevel >= BUILD_RELEASE_UPLOAD)
 		{
 			print("Uploading Build!");
+			try
+			{
+				stage(projectFolder + "-Upload") 
+				{
+					if(releaseBuildId)
+					{
+						print("Uploading at " + "DailyBuild" + currentBuild.number + "/" + releaseBuildId)
+					}
+					else
+					{
+						print("Build id not set. Must have failed")
+						sh "exit 1"
+					}
+				}
+			}
+			catch(e) {
+				wereFailures = true
+				echo e.toString()  
+			}
 		}
 
         //rename folder
