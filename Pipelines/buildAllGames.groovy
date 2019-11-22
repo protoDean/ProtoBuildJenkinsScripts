@@ -8,13 +8,19 @@ node{
 
 	print "Using settings: " + file.text
 
-	for (game in dailyBuildSettings.games) 
+	if(dailyBuildSettings.games != null)
 	{
-		print "Doing Game " + game.projectName
-		for (target in game.targets) 
-		{	
-			print "Doing Target " + target.id
-		   dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , game.target.id , game.target.buildLevel);
+		for (game in dailyBuildSettings.games) 
+		{
+			print "Doing Game " + game.projectName
+			if(game.targets != null)
+			{
+				for (target in game.targets) 
+				{	
+					print "Doing Target " + target.id
+					dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , game.target.id , game.target.buildLevel);
+				}
+			}
 		}
 	}
 
