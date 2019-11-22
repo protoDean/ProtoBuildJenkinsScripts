@@ -1,4 +1,4 @@
-def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersion) {
+def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersion , List<String> targets) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -26,79 +26,81 @@ def DoGame(String projectFolder , String sourceBranch ,  String paramUnityVersio
 		
 		def buildProfile 
         
-		try
+		if(targets.find { it == TARGET_IOS })
 		{
-			buildProfile = PROFILE_IOS_RELEASE
-			stage(buildProfile + projectFolder) {
-				
-				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-						sh "exit 1"
-					}
-				def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
-					[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] ,
-					[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] 
-					], propagate: true, wait: true
+			try
+			{
+				buildProfile = PROFILE_IOS_RELEASE
+				stage(buildProfile + projectFolder) {
 					
-					
-				finalBuildNumber = "" + finalBuildResult.number
+					def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] ,
+						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] 
+						], propagate: true, wait: true
+						
+						
+					finalBuildNumber = "" + finalBuildResult.number
+				}
+			}
+			catch(e) {
+				wereFailures = true
+				echo e.toString()  
+			}
+			
+			try
+			{
+				buildProfile = PROFILE_IOS_DEBUG
+				stage(buildProfile + projectFolder) {
+			
+					build job: 'IosDevBuild', parameters: commonParams + [
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
+						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] ,
+						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
+						], propagate: true, wait: true
+				}
+			}
+			catch(e) {
+				wereFailures = true
+				echo e.toString()  
 			}
 		}
-		catch(e) {
-        	wereFailures = true
-        	echo e.toString()  
-    	}
-        
-		try
+
+		if(targets.find { it == TARGET_ANDROID })
 		{
-			buildProfile = PROFILE_IOS_DEBUG
-			stage(buildProfile + projectFolder) {
-		
-				build job: 'IosDevBuild', parameters: commonParams + [
-					[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
-					[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_IOS] ,
-					[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
-					], propagate: true, wait: true
+			try{
+				buildProfile = PROFILE_ANDROID_DEBUG
+				stage(buildProfile + projectFolder) {
+			
+					def finalBuildResult = build job: 'AndroidDevBuild', parameters: commonParams + [
+						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
+						], propagate: true, wait: true
+						
+						
+					finalBuildNumber = "" + finalBuildResult.number
+				}
+			}
+			catch(e) {
+				wereFailures = true
+				echo e.toString()  
+			}
+			
+			try{
+				buildProfile = PROFILE_ANDROID_DEBUG
+				stage(buildProfile + projectFolder) {
+			
+					build job: 'AndroidDevBuild', parameters: commonParams + [
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
+						[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
+						[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
+						], propagate: true, wait: true
+				}
+			}
+			catch(e) {
+				wereFailures = true
+				echo e.toString()  
 			}
 		}
-		catch(e) {
-        	wereFailures = true
-        	echo e.toString()  
-    	}
-    
-		try{
-			buildProfile = PROFILE_ANDROID_DEBUG
-			stage(buildProfile + projectFolder) {
-		
-				def finalBuildResult = build job: 'AndroidDevBuild', parameters: commonParams + [
-					[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
-					[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile] 
-					], propagate: true, wait: true
-					
-					
-				finalBuildNumber = "" + finalBuildResult.number
-			}
-		}
-		catch(e) {
-        	wereFailures = true
-        	echo e.toString()  
-    	}
-        
-		try{
-			buildProfile = PROFILE_ANDROID_DEBUG
-			stage(buildProfile + projectFolder) {
-		
-				build job: 'AndroidDevBuild', parameters: commonParams + [
-					[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile],
-					[$class: 'StringParameterValue', name: 'buildTarget', value: TARGET_ANDROID] ,
-					[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]
-					], propagate: true, wait: true
-			}
-		}
-		catch(e) {
-        	wereFailures = true
-        	echo e.toString()  
-    	}
-        
         //rename folder
         //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
         //Upload Release build if neccessary.

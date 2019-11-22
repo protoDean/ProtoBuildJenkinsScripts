@@ -25,12 +25,12 @@ node {
 
 
 	//Slurper
-    def json = new JsonSlurper().parseText(env.someJson);
+    
 
 	print json.test
-
+	// env.someJson
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
-    String fileContent = file.text
+	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
 	print fileContent
 }
