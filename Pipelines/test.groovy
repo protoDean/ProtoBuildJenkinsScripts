@@ -32,6 +32,8 @@ node {
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
+	env.someJson = "foobar"
+
 	print fileContent
 }
 
