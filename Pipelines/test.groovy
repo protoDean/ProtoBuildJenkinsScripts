@@ -33,6 +33,13 @@ node {
 	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
 	env.someJson = "foobar"
+
+	print env.testProperty
+
+	env.testProperty = "foobar"
+
+	print env.testProperty
+
 }
 
 def DoGame(String gameName) {
