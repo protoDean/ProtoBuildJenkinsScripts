@@ -8,8 +8,10 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final TARGET_ANDROID = "Android"
 	final TARGET_IOS = "iOS"
 
-	final Int 
- 		BUILD_NONE = 0 , BUILD_DEBUG = 1 , BUILD_RELEASE = 2 , BUILD_RELEASE_UPLOAD = 3
+	final Int 	BUILD_NONE = 0 
+	final Int 	BUILD_DEBUG = 1
+	final Int 	BUILD_RELEASE = 2
+	final Int 	BUILD_RELEASE_UPLOAD = 3
 	
 
 	def wereFailures = false;
