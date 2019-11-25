@@ -76,7 +76,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					}
 
 					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-					sh "cp ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}"
+					sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 				}
 			}
 			catch(e) {
