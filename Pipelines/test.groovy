@@ -40,6 +40,13 @@ node {
 
 	print env.testProperty
 
+
+	print "Test scm"
+
+	def hgOutput = sh(returnStdout: true, script: "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest").trim()
+
+	print hgOutput
+
 }
 
 def DoGame(String gameName) {
