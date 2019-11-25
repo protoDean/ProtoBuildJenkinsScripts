@@ -46,7 +46,7 @@ node {
 	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest"
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
-	print hgOutput
+	//print hgOutput
 
 }
 
@@ -72,16 +72,16 @@ def DoGame(String gameName) {
 }
 
 
-def runShell(String command){
+// def runShell(String command){
 
-    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+//     def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
 
-    def output =  readFile(file: "tmp.txt")
+//     def output =  readFile(file: "tmp.txt")
 	
-    if (responseCode != 0){
-      println "[ERROR] ${output}"
-      throw new Exception("${output}")
-    }else{
-      return "${output}"
-    }
-}
+//     if (responseCode != 0){
+//       println "[ERROR] ${output}"
+//       throw new Exception("${output}")
+//     }else{
+//       return "${output}"
+//     }
+// }
