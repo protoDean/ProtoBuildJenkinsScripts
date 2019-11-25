@@ -109,10 +109,14 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 					def finalBuildResult = build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
 
+					def envVariables = finalBuildResult.getBuildVariables();
+					def debugBuildId = envVariables.unityBuildId;
+
 					if(target == TARGET_ANDROID)
 					{
+
 						//Copy the apk too
-						archivePath = "${buildPath}/${releaseBuildId}"
+						archivePath = "${buildPath}/${debugBuildId}"
 						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 					}
