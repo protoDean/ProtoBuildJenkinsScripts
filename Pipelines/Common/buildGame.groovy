@@ -21,7 +21,9 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber = null
        
-		def buildPath = "../DailyBuilds/DailyBuild" + currentBuild.number
+	   def dailyBuildFolder = "DailyBuild" + currentBuild.number
+		def buildPath = "../DailyBuilds/${dailyBuildFolder}"
+
 		def outputFolder =  "Daily/${projectFolder}Daily" +  currentBuild.number
         
         def commonParams = [
@@ -62,17 +64,21 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					if(target == TARGET_ANDROID)
 					{
 						//TODO: Android - can just move it.
+						archivePath = "${buildPath}/${releaseBuildId}"
 					}
 					else if(target == TARGET_IOS)
 					{
 						
 						xCodePath = "${buildPath}/${releaseBuildId}"
-						archivePath = "${xCodePath}${ARCHIVE_POST_FIX}/${releaseBuildId}.xcarchive"
+						archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
 						//iOS - archive it.
-						sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath} -configuration Release -scheme Unity-iPhone"
+						sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -configuration Release -scheme Unity-iPhone"
 
 						//TODO: now move it.
 					}
+
+					"mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+					"mv ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}"
 				}
 			}
 			catch(e) {
@@ -128,7 +134,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						{
 							//iOS - archive it.
 							print("xCode Exporting ipa")
-							sh "xcodebuild -exportArchive -archivePath ${archivePath} -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${xCodePath}${ARCHIVE_POST_FIX}/Ipa"
+							sh "xcodebuild -exportArchive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${archivePath}/Ipa"
 
 
 							print("xCode Uploading ipa")
