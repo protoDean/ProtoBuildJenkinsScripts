@@ -34,7 +34,10 @@ node {
 
 	print "Test scm"
 
-	sh "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
+	script{
+		echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
+		sh "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
+	}
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
 	//print hgOutput
