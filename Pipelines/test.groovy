@@ -34,9 +34,11 @@ node {
 
 	print "Test scm"
 
+	def projectFolder = "JenkinsTest"
+
 	script{
 		echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
-		sh "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
+		sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	}
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
