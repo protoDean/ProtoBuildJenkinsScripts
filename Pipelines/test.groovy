@@ -43,7 +43,7 @@ node {
 
 	print "Test scm"
 
-	def hgOutput = sh(returnStdout: true, script: "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest").result
+	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
 	print hgOutput
 
@@ -68,4 +68,16 @@ def DoGame(String gameName) {
         	echo PROFILE_IOS_RELEASE 
 		}
 
+}
+
+def runShell(String command){
+    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+    def output =  readFile(file: "tmp.txt")
+
+    if (responseCode != 0){
+      println "[ERROR] ${output}"
+      throw new Exception("${output}")
+    }else{
+      return "${output}"
+    }
 }
