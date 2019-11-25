@@ -32,18 +32,9 @@ node {
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
-	env.someJson = "foobar"
-
-	print env.testProperty
-
-	env.testProperty = "foobar"
-
-	print env.testProperty
-
-
 	print "Test scm"
 
-	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest"
+	sh "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
 	//print hgOutput
