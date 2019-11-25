@@ -80,7 +80,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				echo e.toString()  
 			}
 		}
-
+/*
 		if(buildLevel >= BUILD_DEBUG)
 		{	
 			try
@@ -107,7 +107,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				echo e.toString()  
 			}
 		}
-
+*/
 		if(buildLevel >= BUILD_RELEASE_UPLOAD)
 		{
 			print("Uploading Build!");
