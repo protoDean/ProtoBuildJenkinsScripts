@@ -43,7 +43,7 @@ node {
 
 	print "Test scm"
 
-	def hgOutput = sh(returnStdout: true, script: "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest").trim()
+	def hgOutput = sh(returnStdout: true, script: "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest").result
 
 	print hgOutput
 
