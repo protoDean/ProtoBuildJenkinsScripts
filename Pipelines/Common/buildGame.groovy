@@ -84,7 +84,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				echo e.toString()  
 			}
 		}
-/*
+
 		if(buildLevel >= BUILD_DEBUG)
 		{	
 			try
@@ -104,6 +104,14 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					}
 
 					def finalBuildResult = build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
+
+					if(target == TARGET_ANDROID)
+					{
+						//Copy the apk too
+						archivePath = "${buildPath}/${releaseBuildId}"
+						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+					}
 				}
 			}
 			catch(e) {
@@ -111,7 +119,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 				echo e.toString()  
 			}
 		}
-*/
+
 		if(buildLevel >= BUILD_RELEASE_UPLOAD)
 		{
 			print("Uploading Build!");
