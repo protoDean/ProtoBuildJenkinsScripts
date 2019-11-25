@@ -73,12 +73,10 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
 						//iOS - archive it.
 						sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -configuration Release -scheme Unity-iPhone"
-
-						//TODO: now move it.
 					}
 
 					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-					sh "mv ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}"
+					sh "cp ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}"
 				}
 			}
 			catch(e) {
