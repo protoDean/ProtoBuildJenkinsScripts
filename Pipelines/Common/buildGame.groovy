@@ -134,7 +134,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						{
 							//iOS - archive it.
 							print("xCode Exporting ipa")
-							sh "xcodebuild -exportArchive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${archivePath}/Ipa"
+							sh "xcodebuild -exportArchive -allowProvisioningUpdates -archivePath ${archivePath}/${releaseBuildId}.xcarchive -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${archivePath}/Ipa"
 
 
 							print("xCode Uploading ipa")
