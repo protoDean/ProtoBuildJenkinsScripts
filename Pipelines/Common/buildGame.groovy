@@ -14,7 +14,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final int 	BUILD_RELEASE_UPLOAD = 3
 
 
-	
+	final ARCHIVE_POST_FIX = "_Archive"
 
 	def wereFailures = false;
        
@@ -36,6 +36,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		def buildProfile 
 		def releaseBuildId = null
 		def archivePath = null
+		def xCodePath = null
         
 		if(buildLevel >= BUILD_RELEASE)
 		{
@@ -64,9 +65,11 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					}
 					else if(target == TARGET_IOS)
 					{
-						archivePath = "${buildPath}/${releaseBuildId}Archive/${releaseBuildId}.xcarchive"
+						
+						xCodePath = "${buildPath}/${releaseBuildId}"
+						archivePath = "${xCodePath}${ARCHIVE_POST_FIX}/${releaseBuildId}.xcarchive"
 						//iOS - archive it.
-						sh "xcodebuild -project ${buildPath}/${releaseBuildId}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath} -configuration Release -scheme Unity-iPhone"
+						sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath} -configuration Release -scheme Unity-iPhone"
 
 						//TODO: now move it.
 					}
@@ -125,10 +128,11 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						{
 							//iOS - archive it.
 							print("xCode Exporting ipa")
-							sh "xcodebuild -exportArchive -archivePath ${archivePath} -exportOptionsPlist ${buildPath}/exportOptions.plist -exportPath ${buildPath}/${releaseBuildId}Archive/Ipa"
+							sh "xcodebuild -exportArchive -archivePath ${archivePath} -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${xCodePath}${ARCHIVE_POST_FIX}/Ipa"
 
 
 							print("xCode Uploading ipa")
+							//altool --upload-app -f "CLI.ipa" -u $USERNAME -p $PASSWORD
 						}
 					}
 					else
