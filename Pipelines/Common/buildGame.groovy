@@ -13,6 +13,10 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final int 	BUILD_RELEASE = 2
 	final int 	BUILD_RELEASE_UPLOAD = 3
 
+	//Update Source
+	//checkout poll: false, scm: [$class: 'MercurialSCM', credentialsId: '', installation: 'Mercurial Default', revision: sourceBranch, source: "${env.PROJECT_PATH}/${projectFolder}"]
+	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
+	sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
