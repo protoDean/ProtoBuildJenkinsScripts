@@ -35,6 +35,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		
 		def buildProfile 
 		def releaseBuildId = null
+		def archivePath = null
         
 		if(buildLevel >= BUILD_RELEASE)
 		{
@@ -55,6 +56,20 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
     				//print "${j1EnvVariables}" 
 
 					releaseBuildId = envVariables.unityBuildId;
+
+					//If successful we want to stash the build artifact somewhere
+					if(target == TARGET_ANDROID)
+					{
+						//TODO: Android - can just move it.
+					}
+					else if(target == TARGET_IOS)
+					{
+						archivePath = "${buildPath}/${releaseBuildId}Archive/${releaseBuildId}.xcarchive"
+						//iOS - archive it.
+						sh "xcodebuild -project ${buildPath}/${releaseBuildId}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath} -configuration Release -scheme Unity-iPhone"
+
+						//TODO: now move it.
+					}
 				}
 			}
 			catch(e) {
@@ -81,7 +96,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]]
 					}
 
-					build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
+					def finalBuildResult = build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
 				}
 			}
 			catch(e) {
@@ -100,6 +115,21 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					if(releaseBuildId)
 					{
 						print("Uploading at " + "DailyBuild" + currentBuild.number + "/" + releaseBuildId)
+
+						//iOS - 
+						if(target == TARGET_ANDROID)
+						{
+							print("Hmmm... not sure how to upload an android build.")
+						}
+						else if(target == TARGET_IOS)
+						{
+							//iOS - archive it.
+							print("xCode Exporting ipa")
+							sh "xcodebuild -exportArchive -archivePath ${archivePath} -exportOptionsPlist ${buildPath}/exportOptions.plist -exportPath ${buildPath}/${releaseBuildId}Archive/Ipa"
+
+
+							print("xCode Uploading ipa")
+						}
 					}
 					else
 					{
