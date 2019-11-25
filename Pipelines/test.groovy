@@ -43,7 +43,8 @@ node {
 
 	print "Test scm"
 
-	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest"
+	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
 	print hgOutput
 
@@ -70,11 +71,13 @@ def DoGame(String gameName) {
 
 }
 
-@NonCPS
-def runShell(String command){
-    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
-    def output =  readFile(file: "tmp.txt")
 
+def runShell(String command){
+
+    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+
+    def output =  readFile(file: "tmp.txt")
+	
     if (responseCode != 0){
       println "[ERROR] ${output}"
       throw new Exception("${output}")
