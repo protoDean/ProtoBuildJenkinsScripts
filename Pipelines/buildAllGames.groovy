@@ -35,7 +35,7 @@ node{
 	
 }
 
-def DoSlackStart(JsonSlurperClassic)
+def DoSlackStart(JsonSlurperClassic dailyBuildSettings)
 {
 	
 	def output = "It's time to build! \n "
