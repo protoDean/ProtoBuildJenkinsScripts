@@ -60,7 +60,7 @@ node {
 
 	def attachments = [
 		[
-			text: output  //'I find your lack of faith disturbing!',
+			text: output , //'I find your lack of faith disturbing!',
 			fallback: 'Hey, Vader seems to be mad at you.',
 			color: '#ff0000'
 		]
