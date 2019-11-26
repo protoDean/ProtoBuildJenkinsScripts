@@ -5,12 +5,12 @@ node{
 
 	def dailyBuildSettings
 
-	{
-		File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
-		dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
-	}
+	
+	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
+	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
+	
 
-	{
+	
 		def output = "It's time to build! \n "
 
 		for (game in dailyBuildSettings.games) 
@@ -33,7 +33,7 @@ node{
 			]
 		]
 		slackSend( attachments: attachments)
-	}
+	
 
 	print "Using settings: " + file.text
 
