@@ -20,7 +20,6 @@ node{
 			for (target in game.targets) 
 			{	
 				output += target.id + " level " + target.buildLevel + ", "
-				dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
 			}
 
 			output += "\n"
