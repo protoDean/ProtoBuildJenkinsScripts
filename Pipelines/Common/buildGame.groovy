@@ -30,7 +30,21 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 		slackSend( attachments: attachments )
 
+		print "skipping. No new changes"
+
 		return;
+	}
+	else
+	{
+		//No new changes
+		def attachments = [
+						[
+							text: "New Changes: \n" + incoming ,
+							color: '#00aa00'
+						]
+					]
+
+		slackSend( attachments: attachments )
 	}
 
 	//Update Source
