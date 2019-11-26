@@ -48,7 +48,7 @@ node {
 
 	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
 
-	sh "echo 'First LIne: " + ${env.JOB_NAME} + "(<${env.BUILD_URL}/console|Open>)' >> testFile.txt"
+	sh "echo 'First LIne: ${env.JOB_NAME} (<${env.BUILD_URL}/console|Open>)' >> testFile.txt"
 
 	sh "echo 'Result Line' >> testFile.txt"
 
