@@ -15,7 +15,7 @@ node {
     //THis lets us get the variables used in this build. Will be handy.
     //def j1EnvVariables = finalBuildResult.getBuildVariables();
     //print "${j1EnvVariables}" 
-    DoGame("Foobie")
+    //DoGame("Foobie")
 
 	print pwd()
 	def imported = load(pwd() + "@script/Pipelines/testImport.groovy")
@@ -32,14 +32,14 @@ node {
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
-	print "Test scm"
+	//print "Test scm"
 
-	def projectFolder = "JenkinsTest"
+	//def projectFolder = "JenkinsTest"
 
-	script{
+	//script{
 		//echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
 		//sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
-	}
+	//}
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
 	slackSend "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
@@ -49,26 +49,26 @@ node {
 
 }
 
-def DoGame(String gameName) {
+// def DoGame(String gameName) {
         
-		final PROFILE_IOS_RELEASE = "Outside Define"
+// 		final PROFILE_IOS_RELEASE = "Outside Define"
 
-		stage("Stage 1")
-		{
-        	echo "It WOrks " + gameName 
-		}
+// 		stage("Stage 1")
+// 		{
+//         	echo "It WOrks " + gameName 
+// 		}
 
-		stage("Stage 2")
-		{
-        	echo "Yeay" 
-		}
+// 		stage("Stage 2")
+// 		{
+//         	echo "Yeay" 
+// 		}
 
-		stage("Stage 2")
-		{
-        	echo PROFILE_IOS_RELEASE 
-		}
+// 		stage("Stage 2")
+// 		{
+//         	echo PROFILE_IOS_RELEASE 
+// 		}
 
-}
+// }
 
 
 // def runShell(String command){
