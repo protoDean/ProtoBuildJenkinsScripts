@@ -46,9 +46,9 @@ node {
 
 	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
 
-	sh "echo 'Hello Guy'} >> testFile.txt"
+	sh "echo 'Hello Guy' >> testFile.txt"
 
-	sh "echo 'Hello Another'} >> testFile.txt"
+	sh "echo 'Hello Another' >> testFile.txt"
 
 	def output = readFile(file: "testFile.txt");
 
