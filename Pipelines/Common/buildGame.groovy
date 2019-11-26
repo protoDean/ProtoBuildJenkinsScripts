@@ -42,10 +42,12 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	}
 	else
 	{
+		def msgText = alwaysBuild ? "No changes found but building anyway." :
+				"No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping."
 		//No new changes
 		def attachments = [
 						[
-							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping." ,
+							text: msgText ,
 							color: '#00aa00'
 						]
 					]
