@@ -37,10 +37,13 @@ node {
 	def projectFolder = "JenkinsTest"
 
 	script{
-		echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
-		sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
+		//echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
+		//sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	}
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+
+	slackSend "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+
 
 	//print hgOutput
 
