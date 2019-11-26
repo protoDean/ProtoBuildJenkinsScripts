@@ -48,9 +48,11 @@ node {
 
 	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
 
-	sh "echo 'Hello Guy' >> testFile.txt"
+	sh "echo 'First LIne:' "+ ${env.JOB_NAME} + "(<${env.BUILD_URL}/console|Open>) >> testFile.txt"
 
-	sh "echo 'Hello Another' >> testFile.txt"
+	sh "echo 'Result Line' >> testFile.txt"
+
+	
 
 	def output = readFile(file: "testFile.txt");
 
@@ -58,7 +60,7 @@ node {
 
 	def attachments = [
 		[
-			text: 'I find your lack of faith disturbing!',
+			text: output  //'I find your lack of faith disturbing!',
 			fallback: 'Hey, Vader seems to be mad at you.',
 			color: '#ff0000'
 		]
@@ -90,7 +92,8 @@ node {
 			]
 		]
 	]
-	slackSend( blocks: blocks)
+	//THis requires a custom bot.
+	//slackSend( blocks: blocks)
 
 
 	//didnt work
