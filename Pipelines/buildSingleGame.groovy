@@ -31,6 +31,17 @@ node{
 				{	
 					if(target.id == env.target)
 					{
+
+						//No new changes
+						def attachments = [
+										[
+											text: "Doing a single build of ${projectFolder} (${game.sourceBranch}} on ${env.target}" ,
+											color: '#00aa00'
+										]
+									]
+
+						slackSend( attachments: attachments )
+
 						
 						print "Doing " + game.projectName + " Target " + target.id
 						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , buildLevel >= 0 ? buildLevel : target.buildLevel , true);
