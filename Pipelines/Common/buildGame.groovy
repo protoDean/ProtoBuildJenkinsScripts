@@ -16,7 +16,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final NO_CHANGES_FOUND = "no changes found"
 
 	//check for incoming
-	def incoming = runShell("hg incoming --branch ${sourceBranch}");
+	def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch}");
 
 	if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
 	{
