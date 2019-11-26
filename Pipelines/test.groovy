@@ -40,11 +40,21 @@ node {
 		//echo "/usr/local/bin/hg pull -R " + env.PROJECT_PATH + "/JenkinsTest"
 		//sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	//}
-	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	
+	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	print hgOutput
 
 	slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
 
+	sh "echo 'Hello Guy'} >> testFile.txt"
 
+	sh "echo 'Hello Another'} >> testFile.txt"
+
+	def output = readFile(file: "testFile.txt");
+
+	print output
+
+	slackUploadFile(filePath : "testFile.txt" , channel : "#builds")
 	//print hgOutput
 
 }
