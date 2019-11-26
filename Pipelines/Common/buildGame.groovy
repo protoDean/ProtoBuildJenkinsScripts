@@ -74,14 +74,15 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber = null
        
-	   def dailyBuildFolder = "DailyBuild" + currentBuild.number
+	    def dateFormat = new SimpleDateFormat("yyyy-MMdd-HHmm")
+   		def date = new Date()
+
+	   def dailyBuildFolder = "DailyBuild_" + dateFormat.format(date)
 		def buildPath = "../DailyBuilds/${dailyBuildFolder}"
 
-		def outputFolder =  "Daily/${projectFolder}Daily" +  currentBuild.number
-        
+
         def commonParams = [
             [$class: 'StringParameterValue', name: 'projectFolder', value: projectFolder],
-            [$class: 'StringParameterValue', name: 'outputFolder', value: outputFolder] ,
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
             [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
             [$class: 'StringParameterValue', name: 'buildPath', value: buildPath],
