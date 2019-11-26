@@ -9,13 +9,33 @@ node{
 		dailyBuildSettings.parseText(file.text);
 	}
 
-	DoSlackStart(dailyBuildSettings)
+	{
+		def output = "It's time to build! \n "
+
+		for (game in dailyBuildSettings.games) 
+		{
+			output += game.projectName + " on branch " + game.sourceBranch + "targets: "
+				
+			for (target in game.targets) 
+			{	
+				output += target.id + " level " + target.buildLevel + ", "
+				dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
+			}
+
+			output += "\n"
+		}
+
+		def attachments = [
+			[
+				text: output ,
+				color: '#00aa00'
+			]
+		]
+		slackSend( attachments: attachments)
+	}
+
 	print "Using settings: " + file.text
 
-
-	
-
-	
 		for (game in dailyBuildSettings.games) 
 		{
 			print "Doing Game " + game.projectName
@@ -35,30 +55,3 @@ node{
 	
 }
 
-def DoSlackStart(JsonSlurperClassic dailyBuildSettings)
-{
-	
-	def output = "It's time to build! \n "
-
-	for (game in dailyBuildSettings.games) 
-	{
-		output += game.projectName + " on branch " + game.sourceBranch + "targets: "
-			
-		for (target in game.targets) 
-		{	
-			output += target.id + " level " + target.buildLevel + ", "
-			dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
-		}
-
-		output += "\n"
-	}
-
-	def attachments = [
-		[
-			text: output ,
-			color: '#00aa00'
-		]
-	]
-	slackSend( attachments: attachments)
-
-}
