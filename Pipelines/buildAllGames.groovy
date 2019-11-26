@@ -38,6 +38,8 @@ node{
 
 		slackSend( attachments: attachments)
 
+		currentBuild.description = output
+
 
 	print "Using settings: " + file.text
 
