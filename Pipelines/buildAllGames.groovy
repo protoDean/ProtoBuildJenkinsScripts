@@ -3,10 +3,11 @@ import groovy.json.JsonSlurperClassic
 node{
 	def dailyBuild = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
-	def dailyBuildSettings = new JsonSlurperClassic()
+	def dailyBuildSettings
+
 	{
 		File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
-		dailyBuildSettings.parseText(file.text);
+		dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 	}
 
 	{
