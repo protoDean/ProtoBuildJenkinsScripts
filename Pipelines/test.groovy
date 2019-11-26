@@ -43,10 +43,12 @@ node {
 		//sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	//}
 	
-	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
-	//print hgOutput
+	
 
 	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
+
+	//Clear the file
+	writeFile(file:"testFile.txt" , text : "")
 
 	sh "echo 'First LIne: ${env.JOB_NAME} (<${env.BUILD_URL}/console|Open>)' >> testFile.txt"
 
@@ -100,6 +102,9 @@ node {
 	//slackUploadFile(filePath : "testFile.txt" , channel : "#builds")
 	//print hgOutput
 
+	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	print hgOutput
+
 }
 
 // def DoGame(String gameName) {
@@ -124,16 +129,16 @@ node {
 // }
 
 
-// def runShell(String command){
+def runShell(String command){
 
-//     def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
 
-//     def output =  readFile(file: "tmp.txt")
+    def output =  readFile(file: "tmp.txt")
 	
-//     if (responseCode != 0){
-//       println "[ERROR] ${output}"
-//       throw new Exception("${output}")
-//     }else{
-//       return "${output}"
-//     }
-// }
+    if (responseCode != 0){
+      println "[ERROR] ${output}"
+      throw new Exception("${output}")
+    }else{
+      return "${output}"
+    }
+}
