@@ -11,18 +11,18 @@ node{
 	
 
 	
-		def output = "It's time to build! \n "
+		def output = "It's time to build! Today we are doing... \n\n"
 
 		for (game in dailyBuildSettings.games) 
 		{
-			output += game.projectName + " on branch " + game.sourceBranch + "targets: "
+			output += game.projectName + " on branch " + game.sourceBranch + " ["
 				
 			for (target in game.targets) 
 			{	
 				output += target.id + " level " + target.buildLevel + ", "
 			}
 
-			output += "\n"
+			output += "]\n"
 		}
 
 		def attachments = [

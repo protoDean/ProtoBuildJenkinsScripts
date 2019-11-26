@@ -13,6 +13,26 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final int 	BUILD_RELEASE = 2
 	final int 	BUILD_RELEASE_UPLOAD = 3
 
+	final NO_CHANGES_FOUND = "no changes found"
+
+	//check for incoming
+	def incoming = runShell("hg incoming --branch ${sourceBranch}");
+
+	if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
+	{
+		//No new changes
+		def attachments = [
+						[
+							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Will skip that." ,
+							color: '#00aa00'
+						]
+					]
+
+		slackSend( attachments: attachments )
+
+		return;
+	}
+
 	//Update Source
 	//checkout poll: false, scm: [$class: 'MercurialSCM', credentialsId: '', installation: 'Mercurial Default', revision: sourceBranch, source: "${env.PROJECT_PATH}/${projectFolder}"]
 	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
@@ -67,7 +87,6 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					//If successful we want to stash the build artifact somewhere
 					if(target == TARGET_ANDROID)
 					{
-						//TODO: Android - can just move it.
 						archivePath = "${buildPath}/${releaseBuildId}"
 					}
 					else if(target == TARGET_IOS)
@@ -81,11 +100,29 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 					sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+
+					def attachments = [
+						[
+							text: releaseBuildId + "Success! (<${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}|Open>)" ,
+							color: '#00aa00'
+						]
+					]
+					slackSend( attachments: attachments)
 				}
 			}
 			catch(e) {
 				wereFailures = true
 				echo e.toString()  
+
+				def attachments = [
+						[
+							text: projectFolder + "-" + buildProfile + "Failed! (<${env.BUILD_URL}|Open>)" ,
+							color: '#ff0000'
+						]
+					]
+
+				slackSend( attachments: attachments )
+				//slackSend( attachments: attachments , channel : "general" )
 			}
 		}
 
@@ -112,6 +149,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					def envVariables = finalBuildResult.getBuildVariables();
 					def debugBuildId = envVariables.unityBuildId;
 
+					def slackButton = ""
 					if(target == TARGET_ANDROID)
 					{
 
@@ -119,12 +157,31 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						archivePath = "${buildPath}/${debugBuildId}"
 						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+
+						slackButton = "(<${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}|Open>)"
 					}
+
+					def attachments = [
+						[
+							text: releaseBuildId + "Success! "+ slackButton  ,
+							color: '#00aa00'
+						]
+					]
+					slackSend( attachments: attachments)
 				}
 			}
 			catch(e) {
 				wereFailures = true
 				echo e.toString()  
+
+					def attachments = [
+						[
+							text: projectFolder + "-" + buildProfile + "Failed! (<${env.BUILD_URL}|Open>)" ,
+							color: '#ff0000'
+						]
+					]
+					
+				slackSend( attachments: attachments )
 			}
 		}
 
@@ -171,6 +228,20 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
         //rename folder
         //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
         //Upload Release build if neccessary.
+}
+
+def runShell(String command){
+
+    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+
+    def output =  readFile(file: "tmp.txt")
+	
+    if (responseCode != 0){
+      println "[ERROR] ${output}"
+      throw new Exception("${output}")
+    }else{
+      return "${output}"
+    }
 }
 
 return this
