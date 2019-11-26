@@ -115,7 +115,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 					def attachments = [
 						[
-							text: releaseBuildId + "Success! (<${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}|Open>)" ,
+							text: releaseBuildId + " Success! (${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId})" ,
 							color: '#00aa00'
 						]
 					]
@@ -128,7 +128,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 				def attachments = [
 						[
-							text: projectFolder + "-" + buildProfile + "Failed! (<${env.BUILD_URL}|Open>)" ,
+							text: projectFolder + "-" + buildProfile + " Failed! (<${env.BUILD_URL}|Open>)" ,
 							color: '#ff0000'
 						]
 					]
@@ -170,12 +170,12 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 
-						slackButton = "(<${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId}|Open>)"
+						slackButton = "(${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId})"
 					}
 
 					def attachments = [
 						[
-							text: releaseBuildId + "Success! "+ slackButton  ,
+							text: debugBuildId + " Success! "+ slackButton  ,
 							color: '#00aa00'
 						]
 					]
@@ -188,7 +188,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 
 					def attachments = [
 						[
-							text: projectFolder + "-" + buildProfile + "Failed! (<${env.BUILD_URL}|Open>)" ,
+							text: projectFolder + "-" + buildProfile + " Failed! (<${env.BUILD_URL}|Open>)" ,
 							color: '#ff0000'
 						]
 					]
