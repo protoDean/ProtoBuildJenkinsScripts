@@ -1,4 +1,4 @@
-def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , int buildLevel) {
+def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , int buildLevel , Boolean alwaysBuild) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -51,8 +51,13 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 					]
 
 		slackSend( attachments: attachments )
-		print "Skipping. No new changes"
-		return;
+		
+		
+		if(alwaysBuild == failed)
+		{
+			print "Skipping. No new changes"
+			return;
+		}
 	}
 
 	//Update Source

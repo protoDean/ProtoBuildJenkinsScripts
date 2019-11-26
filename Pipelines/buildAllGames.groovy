@@ -52,7 +52,7 @@ node{
 					if(target.buildLevel > 0)
 					{
 						print "Doing Target " + target.id
-						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
+						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel , false);
 					}
 				}
 

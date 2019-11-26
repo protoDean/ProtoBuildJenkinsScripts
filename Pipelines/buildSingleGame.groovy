@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurperClassic
+
 node{
 
 	//DEPRECATED
@@ -31,7 +33,7 @@ node{
 					{
 						
 						print "Doing " + game.projectName + " Target " + target.id
-						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , buildLevel >= 0 ? buildLevel : target.buildLevel);
+						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , buildLevel >= 0 ? buildLevel : target.buildLevel , true);
 					}
 				}
 			}
