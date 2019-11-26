@@ -29,10 +29,15 @@ node{
 			[
 				text: output ,
 				color: '#00aa00'
+			],
+			[
+				text: "View on <${env.BUILD_URL}|Jenkins>" ,
+				color: '#00aa00'
 			]
 		]
+
 		slackSend( attachments: attachments)
-	
+
 
 	print "Using settings: " + file.text
 

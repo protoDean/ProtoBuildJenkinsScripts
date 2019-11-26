@@ -16,32 +16,42 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	final NO_CHANGES_FOUND = "no changes found"
 
 	//check for incoming
-	def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch}");
+	def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
 	if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
 	{
-		//No new changes
-		def attachments = [
-						[
-							text: "New Changes: \n" + incoming ,
-							color: '#00aa00'
-						]
-					]
 
-		slackSend( attachments: attachments )
+		def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}");
+
+		if(currentBranch.equalsIgnoreCase(sourceBranch))
+		{
+			//No new changes
+			def attachments = [
+							[
+								text: "New Changes: \n" + incoming ,
+								color: '#00aa00'
+							]
+						]
+
+			slackSend( attachments: attachments )
+		}
+		else
+		{
+			slackSend("Source branch has changed from " + currentBranch + " to " + sourceBranch)
+		}
 	}
 	else
 	{
 		//No new changes
 		def attachments = [
 						[
-							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Will skip that." ,
+							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping." ,
 							color: '#00aa00'
 						]
 					]
 
 		slackSend( attachments: attachments )
-		print "skipping. No new changes"
+		print "Skipping. No new changes"
 		return;
 	}
 
