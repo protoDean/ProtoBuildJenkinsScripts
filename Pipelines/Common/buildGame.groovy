@@ -24,7 +24,7 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 	if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
 	{
 
-		def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}");
+		def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}").trim();
 
 		if(currentBranch.equalsIgnoreCase(sourceBranch))
 		{
@@ -40,7 +40,14 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		}
 		else
 		{
-			slackSend("Source branch has changed from " + currentBranch + " to " + sourceBranch)
+			def attachments = [
+							[
+								text:"Source branch has changed from " + currentBranch + " to " + sourceBranch ,
+								color: '#00aa00'
+							]
+						]
+
+			slackSend( attachments: attachments )
 		}
 	}
 	else
