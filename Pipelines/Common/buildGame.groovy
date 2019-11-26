@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat 
+import java.util.Date
+
 def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , int buildLevel , boolean alwaysBuild) {
         
    	final PROFILE_IOS_RELEASE = "iosRelease"
