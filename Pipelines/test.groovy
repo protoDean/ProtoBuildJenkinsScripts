@@ -29,8 +29,8 @@ node {
 
 	//print json.test
 	// env.someJson
-	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
-	def dailyBuildSettings = new JsonSlurper().parseText(file.text);
+	//File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
+	//def dailyBuildSettings = new JsonSlurper().parseText(file.text);
 
 	//print "Test scm"
 
@@ -42,7 +42,7 @@ node {
 	//}
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 
-	slackSend(color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+	slackSend(channel: "#builds" color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
 
 
 	//print hgOutput
