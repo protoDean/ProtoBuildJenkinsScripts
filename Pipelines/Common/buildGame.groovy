@@ -23,28 +23,26 @@ def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUni
 		//No new changes
 		def attachments = [
 						[
-							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Will skip that." ,
-							color: '#00aa00'
-						]
-					]
-
-		slackSend( attachments: attachments )
-
-		print "skipping. No new changes"
-
-		return;
-	}
-	else
-	{
-		//No new changes
-		def attachments = [
-						[
 							text: "New Changes: \n" + incoming ,
 							color: '#00aa00'
 						]
 					]
 
 		slackSend( attachments: attachments )
+	}
+	else
+	{
+		//No new changes
+		def attachments = [
+						[
+							text: "No New Changes found in ${projectFolder} branch ${sourceBranch}. Will skip that." ,
+							color: '#00aa00'
+						]
+					]
+
+		slackSend( attachments: attachments )
+		print "skipping. No new changes"
+		return;
 	}
 
 	//Update Source
