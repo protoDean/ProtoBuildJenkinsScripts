@@ -42,8 +42,11 @@ node{
 			
 				for (target in game.targets) 
 				{	
-					print "Doing Target " + target.id
-					dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
+					if(target.buildLevel > 0)
+					{
+						print "Doing Target " + target.id
+						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , target.buildLevel);
+					}
 				}
 
 		}
