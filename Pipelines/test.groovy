@@ -41,10 +41,10 @@ node {
 		//sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	//}
 	
-	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
-	print hgOutput
+	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	//print hgOutput
 
-	slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
+	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
 
 	sh "echo 'Hello Guy'} >> testFile.txt"
 
