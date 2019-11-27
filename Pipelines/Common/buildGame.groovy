@@ -1,8 +1,14 @@
 import java.text.SimpleDateFormat 
 import java.util.Date
 
-def DoGamePlatform(String projectFolder , String sourceBranch ,  String paramUnityVersion , String target , int buildLevel , boolean alwaysBuild) {
-        
+def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult) {
+    
+	String projectFolder = game.projectName 
+	String sourceBranch = game.sourceBranch  
+	String paramUnityVersion = game.unityVersion
+	String target = targetSetting.id
+	int buildLevel = targetSetting.buildLevel
+
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
 	final PROFILE_ANDROID_DEBUG = "googleDebugApk"
