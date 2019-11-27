@@ -128,7 +128,7 @@ def GetTarget( String targetId ,  gameResults)
 		id : targetId,
 		buildLevel : 0,
 		changeSet : null
-	])
+	]
 
 	gameResults.targets += newTarget
 
