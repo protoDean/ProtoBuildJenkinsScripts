@@ -77,7 +77,7 @@ node{
 
 	print JsonOutput.toJson(buildResults)
 		//Now write the result.
-	writeFile(file:BUILD_RESULTS , JsonOutput.toJson(buildResults) )
+	writeFile(file:BUILD_RESULTS , text : JsonOutput.toJson(buildResults) )
 
 	//dailyBuild.DoGame("LawnMower" ,"default" , "2019.2.9f1");
 	//dailyBuild.DoGame("Starfish" , "default" ,"2019.1.14f1");
