@@ -106,7 +106,7 @@ def GetGameResults( gameToGet ,  results)
 		projectName : gameToGet.projectName ,
 		unityVersion :  gameToGet.unityVersion,
 		targets : []
-	])
+		]
 
 	return null
 }
