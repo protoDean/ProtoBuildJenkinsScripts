@@ -1,5 +1,6 @@
 
 import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 //Using Slack
 //https://github.com/jenkinsci/slack-plugin/blob/master/README.md
