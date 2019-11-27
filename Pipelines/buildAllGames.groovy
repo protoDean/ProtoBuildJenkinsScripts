@@ -96,7 +96,7 @@ def GetGameResults( gameToGet ,  results)
 	//add new
 	results.add([
 		projectName : gameToGet.projectName ,
-		unityVersion :  gameToGet.unityVersion
+		unityVersion :  gameToGet.unityVersion,
 		targets : []
 	])
 
