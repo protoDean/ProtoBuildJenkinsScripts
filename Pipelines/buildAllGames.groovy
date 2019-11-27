@@ -10,20 +10,20 @@ node{
 	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 	
 	final String BUILD_RESULTS = "dailyBuildResults.json";
-	def buildResults 
-	if(fileExists(BUILD_RESULTS))
-	{
+	def buildResults = null
+	//if(fileExists(BUILD_RESULTS))
+	//{
 		print "exists"
 
 		String txt = readFile(file : BUILD_RESULTS) 
 		print txt
 
 		buildResults = new JsonSlurperClassic().parseText(txt )
-	}
-	else
-	{
-		buildResults = [ games: [] ]
-	}
+	//}
+	//else
+	//{
+	//	buildResults = [ games: [] ]
+	//}
 
 		def output = "It's time to build! Today we are doing... \n\n"
 
