@@ -19,7 +19,7 @@ node{
 	{
 		buildResults = new JsonSlurperClassic().parseText("{}") 
 	}
-	
+
 		def output = "It's time to build! Today we are doing... \n\n"
 
 		for (game in dailyBuildSettings.games) 
@@ -102,7 +102,7 @@ def GetGameResults( gameToGet ,  results)
 	}
 
 	//add new
-	results.add([
+	results.games += [
 		projectName : gameToGet.projectName ,
 		unityVersion :  gameToGet.unityVersion,
 		targets : []
