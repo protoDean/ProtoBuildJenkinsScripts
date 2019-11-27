@@ -230,13 +230,15 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 					def slackButton = ""
 					if(target == TARGET_ANDROID)
 					{
+						//Add a little bat to deploy it.
+						writeFile(file:"${buildPath}/${debugBuildId}/deployWindows.bat" , text : "D:\\android\\sdk\\platform-tools\\adb.exe install -r build.apk\npause")
 
 						//Copy the apk too
 						archivePath = "${buildPath}/${debugBuildId}"
 						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 
-						slackButton = "(${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId})"
+						slackButton = "(${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${debugBuildId})"
 					}
 
 					def attachments = [
@@ -328,6 +330,57 @@ def runShell(String command){
    // }else{
       return "${output}"
     //}
+}
+
+
+def GetTargetResults( gameToGet ,  results)
+{
+	for (game in results.games) 
+	{
+		String projectFolder = game.projectName 
+		String sourceBranch = game.sourceBranch  
+		String paramUnityVersion = game.unityVersion
+
+		if(game.projectName == gameToGet.projectName &&
+			game.paramUnityVersion == gameToGet.paramUnityVersion)
+			{
+				return game;
+			}
+
+	}
+
+	//add new
+	def newGame = [
+		projectName : gameToGet.projectName ,
+		unityVersion :  gameToGet.unityVersion,
+		targets : []
+		]
+
+	results.games += newGame 
+	return newGame
+}
+
+def GetTarget( String targetId ,  gameResults)
+{
+	for (target in gameResults.targets) 
+	{
+	
+		if(target.id == targetId)
+		{
+			return target;
+		}
+	}
+
+	//add new
+	def newTarget = [
+		id : targetId,
+		buildLevel : 0,
+		changeSet : null
+	]
+
+	gameResults.targets += newTarget
+
+	return newTarget
 }
 
 return this
