@@ -9,6 +9,24 @@ node{
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 
+	final String BUILD_RESULTS = "dailyBuildResults.json"
+	def buildResults = null
+
+	if(fileExists(BUILD_RESULTS))
+	{
+		print "exists"
+
+		String txt = readFile(file : BUILD_RESULTS) 
+		print "Existing Build Results: \n " + txt
+
+		buildResults = new JsonSlurperClassic().parseText(txt )
+	}
+	else
+	{
+		buildResults = [ games: [] ]
+	}
+
+
 	int buildLevel = -1;
 
 	switch(env.buildLevel) {
@@ -23,15 +41,22 @@ node{
 		case "upload": buildLevel = 3
 	}
 
+	game.projectName , game.sourceBranch , game.unityVersion , target.id ,  , true
+
+	
+
 		for (game in dailyBuildSettings.games) 
 		{
 			if(game.projectName == env.projectFolder)
 			{
+				def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
+
 				for (target in game.targets) 
 				{	
 					if(target.id == env.target)
 					{
-
+						def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
+						
 						//No new changes
 						def attachments = [
 										[
@@ -42,12 +67,20 @@ node{
 
 						slackSend( attachments: attachments )
 
-						
+						if(buildLevel >= 0)
+						{
+							target.buildLevel = buildLevel
+						}
+					
 						print "Doing " + game.projectName + " Target " + target.id
-						dailyBuild.DoGamePlatform(game.projectName , game.sourceBranch , game.unityVersion , target.id , buildLevel >= 0 ? buildLevel : target.buildLevel , true);
+						dailyBuild.DoGamePlatform(target , game , false , gameTargetResult);
 					}
 				}
 			}
 		}
+
+	print JsonOutput.toJson(buildResults)
+	//Now write the result.
+	writeFile(file:BUILD_RESULTS , text : JsonOutput.toJson(buildResults) )
 
 }

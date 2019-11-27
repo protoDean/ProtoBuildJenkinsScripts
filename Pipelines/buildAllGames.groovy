@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 node{
-	def dailyBuild = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
+	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
 	def dailyBuildSettings
 
@@ -61,22 +61,18 @@ node{
 		for (game in dailyBuildSettings.games) 
 		{
 			print "Doing Game " + game.projectName
-			def gameResult = GetGameResults(game , buildResults)
-			if(gameResult == null)
-			{
-				gameResult = game
-			}
-			
+			def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
+
 				for (target in game.targets) 
 				{	
 					if(target.buildLevel > 0)
 					{
-						def gameTargetResult = GetTarget(target.id , gameResult)
+						def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
 
 						print("Doing Target " + target.id)
 						 
 
-						dailyBuild.DoGamePlatform(target , game , false , gameTargetResult);
+						DailyBuildCode.DoGamePlatform(target , game , false , gameTargetResult);
 					}
 				}
 		}
@@ -89,54 +85,4 @@ node{
 	//dailyBuild.DoGame("Starfish" , "default" ,"2019.1.14f1");
 	//dailyBuild.DoGame("SlingKong" , "default" ,"2019.1.14f1");
 	
-}
-
-def GetGameResults( gameToGet ,  results)
-{
-	for (game in results.games) 
-	{
-		String projectFolder = game.projectName 
-		String sourceBranch = game.sourceBranch  
-		String paramUnityVersion = game.unityVersion
-
-		if(game.projectName == gameToGet.projectName &&
-			game.paramUnityVersion == gameToGet.paramUnityVersion)
-			{
-				return game;
-			}
-
-	}
-
-	//add new
-	def newGame = [
-		projectName : gameToGet.projectName ,
-		unityVersion :  gameToGet.unityVersion,
-		targets : []
-		]
-
-	results.games += newGame 
-	return newGame
-}
-
-def GetTarget( String targetId ,  gameResults)
-{
-	for (target in gameResults.targets) 
-	{
-	
-		if(target.id == targetId)
-		{
-			return target;
-		}
-	}
-
-	//add new
-	def newTarget = [
-		id : targetId,
-		buildLevel : 0,
-		changeSet : null
-	]
-
-	gameResults.targets += newTarget
-
-	return newTarget
 }
