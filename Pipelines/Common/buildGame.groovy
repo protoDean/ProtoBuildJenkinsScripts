@@ -27,61 +27,89 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 	//check for incoming
 	def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
-	if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
-	{
+	// if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
+	// {
 
-		def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}").trim();
+	// 	def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}").trim();
 
-		if(currentBranch.equalsIgnoreCase(sourceBranch))
-		{
-			//No new changes
-			def attachments = [
-							[
-								text: "New Changes: \n" + incoming ,
-								color: '#00aa00'
-							]
-						]
+	// 	if(currentBranch.equalsIgnoreCase(sourceBranch))
+	// 	{
+	// 		//No new changes
+	// 		def attachments = [
+	// 						[
+	// 							text: "New Changes: \n" + incoming ,
+	// 							color: '#00aa00'
+	// 						]
+	// 					]
 
-			slackSend( attachments: attachments )
-		}
-		else
-		{
-			def attachments = [
-							[
-								text:"Source branch has changed from " + currentBranch + " to " + sourceBranch ,
-								color: '#00aa00'
-							]
-						]
+	// 		slackSend( attachments: attachments )
+	// 	}
+	// 	else
+	// 	{
+	// 		def attachments = [
+	// 						[
+	// 							text:"Source branch has changed from " + currentBranch + " to " + sourceBranch ,
+	// 							color: '#00aa00'
+	// 						]
+	// 					]
 
-			slackSend( attachments: attachments )
-		}
-	}
-	else
-	{
-		def msgText = alwaysBuild ? "No changes found but building anyway." :
-				"No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping."
-		//No new changes
-		def attachments = [
-						[
-							text: msgText ,
-							color: '#00aa00'
-						]
-					]
+	// 		slackSend( attachments: attachments )
+	// 	}
+	// }
+	// else
+	// {
+	// 	def msgText = alwaysBuild ? "No changes found but building anyway." :
+	// 			"No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping."
+	// 	//No new changes
+	// 	def attachments = [
+	// 					[
+	// 						text: msgText ,
+	// 						color: '#00aa00'
+	// 					]
+	// 				]
 
-		slackSend( attachments: attachments )
+	// 	slackSend( attachments: attachments )
 		
 		
-		if(alwaysBuild == false)
-		{
-			print "Skipping. No new changes"
-			return;
-		}
-	}
+	// 	if(alwaysBuild == false)
+	// 	{
+	// 		print "Skipping. No new changes"
+	// 		return;
+	// 	}
+	// }
+
+
+	
 
 	//Update Source
 	//checkout poll: false, scm: [$class: 'MercurialSCM', credentialsId: '', installation: 'Mercurial Default', revision: sourceBranch, source: "${env.PROJECT_PATH}/${projectFolder}"]
 	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
+
+
+	//Check against existing builds.
+	def currentRevision = runShell("hg identify -i -R ${env.PROJECT_PATH}/${projectFolder}").trim()
+	if( gameTargetResult.changeSet == currentRevision && gameTargetResult.buildLevel >= buildLevel)
+	{
+		//we can skip this.
+		def attachments = [
+	 					[
+	 						text: "${projectFolder} branch ${sourceBranch}. Skipping." ,
+	 						color: '#00aa00'
+	 					]
+	 				]
+
+	 	slackSend( attachments: attachments )
+		return
+	}
+	
+	slackSend( attachments: [
+	 						[
+	 							text: "Building ${projectFolder} branch ${sourceBranch} \n New Changes: \n" + incoming ,
+	 							color: '#00aa00'
+	 						]
+	 					] )
+
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
@@ -154,6 +182,10 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 						]
 					]
 					slackSend( attachments: attachments)
+
+					
+
+					
 				}
 			}
 			catch(e) {
@@ -231,9 +263,17 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 			}
 		}
 
+		
+		if(wereFailures == false)
+		{
+			gameTargetResult.buildLevel = buildLevel
+			gameTargetResult.changeSet == currentRevision;
+		}
+		
+
 		if(buildLevel >= BUILD_RELEASE_UPLOAD)
 		{
-			print("Uploading Build!");
+			print("Uploading Build! Not currently working sorry.");
 			try
 			{
 				stage(projectFolder + "-Upload") 
