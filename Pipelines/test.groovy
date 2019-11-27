@@ -67,7 +67,7 @@ node {
 			color: '#ff0000'
 		]
 	]
-	slackSend( attachments: attachments)
+	//slackSend( attachments: attachments)
 
 
 	blocks = [
@@ -102,8 +102,14 @@ node {
 	//slackUploadFile(filePath : "testFile.txt" , channel : "#builds")
 	//print hgOutput
 
-	def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
-	print hgOutput
+	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
+	//print hgOutput
+
+	Student study = new Student();
+
+
+	print study.name
+
 
 }
 
@@ -141,4 +147,11 @@ def runShell(String command){
     }else{
       return "${output}"
     }
+}
+
+class Student {
+
+   public int studentNum = 45;
+   public String name = "Bobby";
+
 }
