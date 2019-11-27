@@ -13,9 +13,11 @@ node{
 	def buildResults 
 	if(fileExists(BUILD_RESULTS))
 	{
+		print "exists"
+
 		String txt = readFile(file : BUILD_RESULTS) 
 		print txt
-		
+
 		buildResults = new JsonSlurperClassic().parseText(txt )
 	}
 	else
