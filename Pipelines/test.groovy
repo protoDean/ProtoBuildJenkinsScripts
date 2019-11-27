@@ -105,7 +105,7 @@ node {
 	//def hgOutput = runShell("/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/JenkinsTest")
 	//print hgOutput
 
-	Student study = new Student();
+	imported.Student study = new imported.Student();
 
 
 	print study.name
