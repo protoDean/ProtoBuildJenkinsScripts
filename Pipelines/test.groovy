@@ -149,9 +149,3 @@ def runShell(String command){
     }
 }
 
-class Student {
-
-   public int studentNum = 45;
-   public String name = "Bobby";
-
-}

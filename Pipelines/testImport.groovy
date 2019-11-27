@@ -7,4 +7,11 @@ def example2() {
   println "Build Num " + currentBuild.number
 }
 
+class Student {
+
+   public int studentNum = 45;
+   public String name = "Bobby";
+
+}
+
 return this
