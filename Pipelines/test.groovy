@@ -110,10 +110,15 @@ node {
 	//print study.name
 
 	final String BUILD_RESULTS = "dailyBuildResults.json";
-	def buildResults 
+	def buildResults = null
 	if(fileExists(BUILD_RESULTS))
 	{
-		buildResults = new JsonSlurperClassic().parseText(readFile(file : BUILD_RESULTS))
+		print "exists"
+
+		String txt = readFile(file : BUILD_RESULTS) 
+		print "Existing Build Results: \n " + txt
+
+		buildResults = new JsonSlurperClassic().parseText(txt )
 	}
 	else
 	{

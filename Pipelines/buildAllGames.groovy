@@ -9,21 +9,22 @@ node{
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 	
-	final String BUILD_RESULTS = "dailyBuildResults.json";
+	final String BUILD_RESULTS = "dailyBuildResults.json"
 	def buildResults = null
-	//if(fileExists(BUILD_RESULTS))
-	//{
+
+	if(fileExists(BUILD_RESULTS))
+	{
 		print "exists"
 
 		String txt = readFile(file : BUILD_RESULTS) 
-		print txt
+		print "Existing Build Results: \n " + txt
 
 		buildResults = new JsonSlurperClassic().parseText(txt )
-	//}
-	//else
-	//{
-	//	buildResults = [ games: [] ]
-	//}
+	}
+	else
+	{
+		buildResults = [ games: [] ]
+	}
 
 		def output = "It's time to build! Today we are doing... \n\n"
 
