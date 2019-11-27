@@ -183,7 +183,7 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 					]
 					slackSend( attachments: attachments)
 
-					
+
 
 					
 				}
@@ -267,7 +267,7 @@ def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult
 		if(wereFailures == false)
 		{
 			gameTargetResult.buildLevel = buildLevel
-			gameTargetResult.changeSet == currentRevision;
+			gameTargetResult.changeSet = currentRevision
 		}
 		
 

@@ -67,7 +67,7 @@ node{
 					{
 						def gameTargetResult = GetTarget(target.id , gameResult)
 
-						print "Doing Target " + target.id
+						print("Doing Target " + target.id)
 						 
 
 						dailyBuild.DoGamePlatform(target , game , false , gameTargetResult);
