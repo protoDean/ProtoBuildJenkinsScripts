@@ -17,7 +17,7 @@ node{
 	}
 	else
 	{
-		buildResults = new JsonSlurperClassic().parseText("{}") 
+		buildResults = [ games: [] ]
 	}
 
 		def output = "It's time to build! Today we are doing... \n\n"
