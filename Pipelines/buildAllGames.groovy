@@ -102,13 +102,14 @@ def GetGameResults( gameToGet ,  results)
 	}
 
 	//add new
-	results.games += [
+	def newGame = [
 		projectName : gameToGet.projectName ,
 		unityVersion :  gameToGet.unityVersion,
 		targets : []
 		]
 
-	return null
+	results.games += newGame 
+	return newGame
 }
 
 def GetTarget( String targetId ,  gameResults)
@@ -117,18 +118,19 @@ def GetTarget( String targetId ,  gameResults)
 	{
 	
 		if(target.id == targetId)
-			{
-				return target;
-			}
-
+		{
+			return target;
+		}
 	}
 
 	//add new
-	gameResults.targets.add([
+	def newTarget = [
 		id : targetId,
 		buildLevel : 0,
 		changeSet : null
 	])
 
-	return null
+	gameResults.targets += newTarget
+
+	return newTarget
 }
