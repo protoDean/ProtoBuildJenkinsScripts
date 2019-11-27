@@ -70,7 +70,7 @@ node{
 						print "Doing Target " + target.id
 						 
 
-						//dailyBuild.DoGamePlatform(target , game , false , gameTargetResult);
+						dailyBuild.DoGamePlatform(target , game , false , gameTargetResult);
 					}
 				}
 		}
