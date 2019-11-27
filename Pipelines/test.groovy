@@ -108,6 +108,17 @@ node {
 	//imported.Student study = new imported.Student();
 	//print study.name
 
+	final String BUILD_RESULTS = "dailyBuildResults.json";
+	def buildResults 
+	if(fileExists(BUILD_RESULTS))
+	{
+		buildResults = new JsonSlurperClassic().parseText(readFile(file : BUILD_RESULTS))
+	}
+	else
+	{
+		buildResults = [ games: [] ]
+	}
+
 
 }
 
