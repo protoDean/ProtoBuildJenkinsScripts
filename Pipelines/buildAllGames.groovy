@@ -5,12 +5,12 @@ node{
 
 	def dailyBuildSettings
 
-	JsonSlurperClassic slurper = new JsonSlurperClassic() 
+	
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
-	dailyBuildSettings = slurper.parseText(file.text);
+	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
 	
 	final String BUILD_RESULTS = "dailyBuildResults.json";
-	def buildResults = fileExists(BUILD_RESULTS) ? slurper.parseText(readFile(BUILD_RESULTS)) : slurper.parseText("{}") 
+	def buildResults = fileExists(BUILD_RESULTS) ? new JsonSlurperClassic().parseText(readFile(BUILD_RESULTS)) : new JsonSlurperClassic().parseText("{}") 
 	
 		def output = "It's time to build! Today we are doing... \n\n"
 
