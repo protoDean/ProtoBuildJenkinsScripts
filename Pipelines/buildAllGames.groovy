@@ -10,7 +10,7 @@ node{
 	dailyBuildSettings = slurper.parseText(file.text);
 	
 	final String BUILD_RESULTS = "dailyBuildResults.json";
-	def buildResults = fileExists(BUILD_RESULTS) ? readFile(BUILD_RESULTS) : slurper.parseText("{}") 
+	def buildResults = fileExists(BUILD_RESULTS) ? slurper.parseText(readFile(BUILD_RESULTS)) : slurper.parseText("{}") 
 	
 		def output = "It's time to build! Today we are doing... \n\n"
 
@@ -47,7 +47,7 @@ node{
 		for (game in dailyBuildSettings.games) 
 		{
 			print "Doing Game " + game.projectName
-			def gameResult = GetGameResults(game)
+			def gameResult = GetGameResults(game , buildResults)
 			if(gameResult == null)
 			{
 				gameResult = game
