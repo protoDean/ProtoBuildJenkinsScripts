@@ -333,7 +333,7 @@ def runShell(String command){
 }
 
 
-def GetTargetResults( gameToGet ,  results)
+def GetGameResults( gameToGet ,  results)
 {
 	for (game in results.games) 
 	{
@@ -360,7 +360,7 @@ def GetTargetResults( gameToGet ,  results)
 	return newGame
 }
 
-def GetTarget( String targetId ,  gameResults)
+def GetTargetResults( String targetId ,  gameResults)
 {
 	for (target in gameResults.targets) 
 	{
