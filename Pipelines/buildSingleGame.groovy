@@ -2,7 +2,6 @@ import groovy.json.JsonSlurperClassic
 
 node{
 
-	//DEPRECATED
 	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
 	def dailyBuildSettings
@@ -69,7 +68,8 @@ node{
 						}
 					
 						print "Doing " + game.projectName + " Target " + target.id
-						DailyBuildCode.DoGamePlatform(game: game , targetSetting : target , alwaysBuild : false , gameTargetResult : gameTargetResult)
+
+						DoGamePlatform.DoGamePlatform(game: game , targetSetting : target , alwaysBuild : false , gameTargetResult : gameTargetResult)
 					}
 				}
 			}
