@@ -70,7 +70,7 @@ node{
 						def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
 
 						print("Doing Target " + target.id)
-						DailyBuildCode.DoGamePlatform(game: game , targetSetting : target , alwaysBuild : false , gameTargetResult : gameTargetResult)
+						DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult)
 					}
 				}
 		}
