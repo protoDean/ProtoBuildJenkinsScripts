@@ -1,5 +1,8 @@
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
+import java.util.Date
+
+
 node{
 	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
@@ -58,6 +61,10 @@ node{
 
 	print "Using settings: " + file.text
 
+	def dateFormat = new SimpleDateFormat("yyyy-MMdd-HHmm")
+   	def date = new Date()
+	def dailyBuildFolder = "DailyBuild_" + dateFormat.format(date)
+
 		for (game in dailyBuildSettings.games) 
 		{
 			print "Doing Game " + game.projectName
@@ -70,7 +77,7 @@ node{
 						def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
 
 						print("Doing Target " + target.id)
-						DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult)
+						DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult , dailyBuildFolder)
 					}
 				}
 		}

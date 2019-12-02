@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat 
 import java.util.Date
 
-def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult) {
+def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult , dailyBuildFolder) {
     
 	String projectFolder = game.projectName 
 	String sourceBranch = game.sourceBranch  
@@ -118,10 +118,9 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
         //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
         def finalBuildNumber = null
        
-	    def dateFormat = new SimpleDateFormat("yyyy-MMdd-HHmm")
-   		def date = new Date()
+	    
 
-	   def dailyBuildFolder = "DailyBuild_" + dateFormat.format(date)
+	  
 		def buildPath = "../DailyBuilds/${dailyBuildFolder}"
 
 

@@ -1,5 +1,6 @@
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
+import java.util.Date
 
 node{
 
@@ -41,40 +42,45 @@ node{
 		case "upload": buildLevel = 3
 	}
 
-		for (game in dailyBuildSettings.games) 
+	def dateFormat = new SimpleDateFormat("yyyy-MMdd-HHmm")
+   	def date = new Date()
+	def dailyBuildFolder = "DailyBuild_" + dateFormat.format(date)
+
+
+	for (game in dailyBuildSettings.games) 
+	{
+		if(game.projectName == env.projectFolder)
 		{
-			if(game.projectName == env.projectFolder)
-			{
-				def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
+			def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
 
-				for (target in game.targets) 
-				{	
-					if(target.id == env.target)
-					{
-						def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
-						
-						//No new changes
-						def attachments = [
-										[
-											text: "Doing a single build of ${projectFolder} (${game.sourceBranch}} on ${env.target}" ,
-											color: '#00aa00'
-										]
-									]
-
-						slackSend( attachments: attachments )
-
-						if(buildLevel >= 0)
-						{
-							target.buildLevel = buildLevel
-						}
+			for (target in game.targets) 
+			{	
+				if(target.id == env.target)
+				{
+					def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
 					
-						print "Doing " + game.projectName + " Target " + target.id
+					//No new changes
+					def attachments = [
+									[
+										text: "Doing a single build of ${projectFolder} (${game.sourceBranch}} on ${env.target}" ,
+										color: '#00aa00'
+									]
+								]
 
-						DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult)
+					slackSend( attachments: attachments )
+
+					if(buildLevel >= 0)
+					{
+						target.buildLevel = buildLevel
 					}
+				
+					print "Doing " + game.projectName + " Target " + target.id
+
+					DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult , dailyBuildFolder)
 				}
 			}
 		}
+	}
 
 	print JsonOutput.toJson(buildResults)
 	//Now write the result.
