@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat 
 import java.util.Date
 
-def DoGamePlatform(targetSetting , game , boolean alwaysBuild , gameTargetResult) {
+def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult) {
     
 	String projectFolder = game.projectName 
 	String sourceBranch = game.sourceBranch  
