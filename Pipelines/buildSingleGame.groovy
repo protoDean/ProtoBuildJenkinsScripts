@@ -41,10 +41,6 @@ node{
 		case "upload": buildLevel = 3
 	}
 
-	game.projectName , game.sourceBranch , game.unityVersion , target.id ,  , true
-
-	
-
 		for (game in dailyBuildSettings.games) 
 		{
 			if(game.projectName == env.projectFolder)
