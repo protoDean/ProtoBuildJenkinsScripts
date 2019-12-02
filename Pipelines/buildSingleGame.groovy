@@ -3,7 +3,7 @@ import groovy.json.JsonSlurperClassic
 node{
 
 	//DEPRECATED
-	def dailyBuild = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
+	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
 
 	def dailyBuildSettings
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
