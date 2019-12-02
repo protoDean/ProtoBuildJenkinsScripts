@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 import java.util.Date
-
+import java.text.SimpleDateFormat 
 
 node{
 	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
