@@ -161,18 +161,21 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 					if(target == TARGET_ANDROID)
 					{
 						archivePath = "${buildPath}/${releaseBuildId}"
-					}
-					else if(target == TARGET_IOS)
-					{
-						
-						xCodePath = "${buildPath}/${releaseBuildId}"
-						archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
-						//iOS - archive it.
-						sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -configuration Release -scheme Unity-iPhone"
+						sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+						sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 					}
 
-					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-					sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+					else if(target == TARGET_IOS)
+					{
+						//Removed archiving for now.
+						//xCodePath = "${buildPath}/${releaseBuildId}"
+						//archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
+						//iOS - archive it.
+						//sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -configuration Release -scheme Unity-iPhone"
+					}
+
+					//sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+					//sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 
 					def attachments = [
 						[
