@@ -89,7 +89,9 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 	//Check against existing builds.
 	def currentRevision = runShell("hg identify -i -R ${env.PROJECT_PATH}/${projectFolder}").trim()
-	if( gameTargetResult.changeSet == currentRevision && gameTargetResult.buildLevel >= buildLevel)
+	if( alwaysBuild == false &&
+		gameTargetResult.changeSet == currentRevision && 
+		gameTargetResult.buildLevel >= buildLevel)
 	{
 		//we can skip this.
 		def attachments = [

@@ -76,7 +76,7 @@ node{
 				
 					print "Doing " + game.projectName + " Target " + target.id
 
-					DailyBuildCode.DoGamePlatform( game ,  target ,  false ,  gameTargetResult , dailyBuildFolder)
+					DailyBuildCode.DoGamePlatform( game ,  target ,  true ,  gameTargetResult , dailyBuildFolder)
 				}
 			}
 		}
