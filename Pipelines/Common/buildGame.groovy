@@ -135,7 +135,7 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
             [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
             [$class: 'StringParameterValue', name: 'buildPath', value: buildPath],
-			[$class: 'StringParameterValue', name: 'buildTarget', value: target] 
+			[$class: 'StringParameterValue', name: 'unityBuildTarget', value: target] 
             ]
 		
 		def buildProfile 
