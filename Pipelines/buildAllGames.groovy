@@ -5,9 +5,6 @@ import java.text.SimpleDateFormat
 
 node{
 	def DailyBuildCode = load(pwd() + "@script/Pipelines/Common/buildGame.groovy")
-
-	def dailyBuildSettings
-
 	
 	File file = new File("/Volumes/StoreSafe/Jenkins/BuildSettings/dailyBuilds.json")
 	dailyBuildSettings = new JsonSlurperClassic().parseText(file.text);
