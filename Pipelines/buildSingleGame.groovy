@@ -15,8 +15,6 @@ node{
 
 	if(fileExists(BUILD_RESULTS))
 	{
-		print "exists"
-
 		String txt = readFile(file : BUILD_RESULTS) 
 		print "Existing Build Results: \n " + txt
 

@@ -50,7 +50,7 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
 	//Update Source
-	sh "/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} -f https://github.com/protoDean/${projectFolder} checkout"
+	sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f https://github.com/protoDean/${projectFolder}"
 	//sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
 	// Get the changeset git describe --abbrev=12 --always
 	// git rev-parse HEAD  :Gets the hash of the HEAD, where we are.
