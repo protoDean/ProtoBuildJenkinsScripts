@@ -51,7 +51,7 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 	//Update Source
 	// https://github.com/protoDean/${projectFolder}.git
-	sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f -b ${sourceBranch}"
+	sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f ${sourceBranch}"
 	//sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
 	// Get the changeset git describe --abbrev=12 --always
 	// git rev-parse HEAD  :Gets the hash of the HEAD, where we are.
@@ -65,12 +65,9 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		gameTargetResult.changeSet == currentRevision && 
 		gameTargetResult.buildLevel >= buildLevel)
 	{
-		
+		print "Build Skipping " + projectFolder + " " + target + " - No Changes required."
 		return
 	}
-	
-	return;
-
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
