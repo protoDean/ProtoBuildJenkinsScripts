@@ -79,12 +79,20 @@ node{
 				}
 		}
 
-	print JsonOutput.toJson(buildResults)
-		//Now write the result.
-	writeFile(file:BUILD_RESULTS , text : JsonOutput.toJson(buildResults) )
+	def resultsJson = JsonOutput.toJson(buildResults)
+	def attachments = [
+									[
+										text: resultsJson ,
+										color: '#00aa00'
+									]
+								]
 
-	//dailyBuild.DoGame("LawnMower" ,"default" , "2019.2.9f1");
-	//dailyBuild.DoGame("Starfish" , "default" ,"2019.1.14f1");
-	//dailyBuild.DoGame("SlingKong" , "default" ,"2019.1.14f1");
+					slackSend( attachments: attachments )
+
+	print resultsJson
+	//Now write the result.
+	writeFile(file:BUILD_RESULTS , text : resultsJson )
+
+	currentBuild.description = resultsJson
 	
 }

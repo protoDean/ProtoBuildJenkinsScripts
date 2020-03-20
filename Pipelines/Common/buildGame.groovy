@@ -1,7 +1,9 @@
 import java.text.SimpleDateFormat 
 import java.util.Date
 
-def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult , dailyBuildFolder) {
+
+
+def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult , dailyBuildFolder ) {
     
 	String projectFolder = game.projectName 
 	String sourceBranch = game.sourceBranch  
@@ -28,93 +30,45 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 	final NO_CHANGES_FOUND = "no changes found"
 
-	//check for incoming
-	def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
-
-	// if(incoming.indexOf(NO_CHANGES_FOUND) < 0)
-	// {
-
-	// 	def currentBranch = runShell("hg identify -b -R ${env.PROJECT_PATH}/${projectFolder}").trim();
-
-	// 	if(currentBranch.equalsIgnoreCase(sourceBranch))
-	// 	{
-	// 		//No new changes
-	// 		def attachments = [
-	// 						[
-	// 							text: "New Changes: \n" + incoming ,
-	// 							color: '#00aa00'
-	// 						]
-	// 					]
-
-	// 		slackSend( attachments: attachments )
-	// 	}
-	// 	else
-	// 	{
-	// 		def attachments = [
-	// 						[
-	// 							text:"Source branch has changed from " + currentBranch + " to " + sourceBranch ,
-	// 							color: '#00aa00'
-	// 						]
-	// 					]
-
-	// 		slackSend( attachments: attachments )
-	// 	}
-	// }
-	// else
-	// {
-	// 	def msgText = alwaysBuild ? "No changes found but building anyway." :
-	// 			"No New Changes found in ${projectFolder} branch ${sourceBranch}. Skipping."
-	// 	//No new changes
-	// 	def attachments = [
-	// 					[
-	// 						text: msgText ,
-	// 						color: '#00aa00'
-	// 					]
-	// 				]
-
-	// 	slackSend( attachments: attachments )
-		
-		
-	// 	if(alwaysBuild == false)
-	// 	{
-	// 		print "Skipping. No new changes"
-	// 		return;
-	// 	}
-	// }
-
-
 	
+	/* 
+	//From Local Mercurial
+	//check for incoming
+	//def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
 	//Update Source
-	//checkout poll: false, scm: [$class: 'MercurialSCM', credentialsId: '', installation: 'Mercurial Default', revision: sourceBranch, source: "${env.PROJECT_PATH}/${projectFolder}"]
 	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
 	sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
 
-
 	//Check against existing builds.
 	def currentRevision = runShell("hg identify -i -R ${env.PROJECT_PATH}/${projectFolder}").trim()
+	*/
+
+	//From GitHub
+	//check for incoming
+	
+	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
+
+	//Update Source
+	sh "/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} -f https://github.com/protoDean/${projectFolder} checkout"
+	//sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
+	// Get the changeset git describe --abbrev=12 --always
+	// git rev-parse HEAD  :Gets the hash of the HEAD, where we are.
+	// git rev-parse master : Gets the hash of the branch?
+
+	//Check against existing builds.
+	def currentRevision = runShell("/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
+
+
 	if( alwaysBuild == false &&
 		gameTargetResult.changeSet == currentRevision && 
 		gameTargetResult.buildLevel >= buildLevel)
 	{
-		//we can skip this.
-		def attachments = [
-	 					[
-	 						text: "${projectFolder} branch ${sourceBranch}. Skipping." ,
-	 						color: '#00aa00'
-	 					]
-	 				]
-
-	 	slackSend( attachments: attachments )
+		
 		return
 	}
 	
-	slackSend( attachments: [
-	 						[
-	 							text: "Building ${projectFolder} branch ${sourceBranch} \n New Changes: \n" + incoming ,
-	 							color: '#00aa00'
-	 						]
-	 					] )
+	return;
 
 
 	final ARCHIVE_POST_FIX = "_Archive"
@@ -282,6 +236,11 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		{
 			gameTargetResult.buildLevel = buildLevel
 			gameTargetResult.changeSet = currentRevision
+			gameTargetResult.lastBuildResult = "Success"
+		}
+		else
+		{
+			gameTargetResult.lastBuildResult = "Failed"
 		}
 		
 
@@ -390,7 +349,8 @@ def GetTargetResults( String targetId ,  gameResults)
 	def newTarget = [
 		id : targetId,
 		buildLevel : 0,
-		changeSet : null
+		changeSet : null,
+		lastBuildResult : "Unknown"
 	]
 
 	gameResults.targets += newTarget

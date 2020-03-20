@@ -82,8 +82,20 @@ node{
 		}
 	}
 
-	print JsonOutput.toJson(buildResults)
+	def resultsJson = JsonOutput.toJson(buildResults)
+	def attachments = [
+									[
+										text: resultsJson ,
+										color: '#00aa00'
+									]
+								]
+
+					slackSend( attachments: attachments )
+
+	print resultsJson
 	//Now write the result.
-	writeFile(file:BUILD_RESULTS , text : JsonOutput.toJson(buildResults) )
+	writeFile(file:BUILD_RESULTS , text : resultsJson )
+
+	currentBuild.description = resultsJson
 
 }
