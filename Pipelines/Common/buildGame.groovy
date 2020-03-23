@@ -51,7 +51,7 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
-		git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}")
+		git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
 	}
 
 	//Update Source
