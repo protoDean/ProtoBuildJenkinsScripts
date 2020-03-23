@@ -75,8 +75,8 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		return
 	}
 
-	print("Skipping the rest for now");
-	return;
+	//print("Skipping the rest for now");
+	//return;
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
