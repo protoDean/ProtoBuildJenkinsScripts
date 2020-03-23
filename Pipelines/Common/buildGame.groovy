@@ -49,10 +49,15 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	
 	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
+	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
+	{
+		git(url: "git:https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}")
+	}
+
 	//Update Source
 	// https://github.com/protoDean/${projectFolder}.git
-	sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git fetch"
-	sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f ${sourceBranch}"
+	//sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git fetch"
+	//sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f ${sourceBranch}"
 	//sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
 	// Get the changeset git describe --abbrev=12 --always
 	// git rev-parse HEAD  :Gets the hash of the HEAD, where we are.
@@ -69,6 +74,9 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		print "Build Skipping " + projectFolder + " " + target + " - No Changes required."
 		return
 	}
+
+	print("Skipping the rest for now");
+	return;
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
