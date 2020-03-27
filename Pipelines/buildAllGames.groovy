@@ -48,7 +48,7 @@ node{
 			[
 				text: "View on <${env.BUILD_URL}|Jenkins>" ,
 				color: '#00aa00'
-			])
+			]])
 
 
 	print "Using settings: " + file.text
