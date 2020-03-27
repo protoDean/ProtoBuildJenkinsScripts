@@ -40,7 +40,7 @@ node{
 			output += "]\n"
 		}
 
-		def attachments = [
+		slackSend( attachments: [
 			[
 				text: output ,
 				color: '#00aa00'
@@ -48,12 +48,7 @@ node{
 			[
 				text: "View on <${env.BUILD_URL}|Jenkins>" ,
 				color: '#00aa00'
-			]
-		]
-
-		slackSend( attachments: attachments)
-
-		currentBuild.description = output
+			])
 
 
 	print "Using settings: " + file.text
@@ -80,14 +75,13 @@ node{
 		}
 
 	def resultsJson = JsonOutput.toJson(buildResults)
-	def attachments = [
+
+	slackSend( attachments:  [
 									[
 										text: resultsJson ,
 										color: '#00aa00'
 									]
-								]
-
-					slackSend( attachments: attachments )
+								] )
 
 	print resultsJson
 	//Now write the result.
