@@ -53,16 +53,17 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
 
-		git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
+		//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
 		
 		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
 		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 			//sh "/usr/bin/git lfs install"
-			//sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
 			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 
+			sh "/usr/bin/git reset --hard origin/${sourceBranch}" 
 			sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 		}
 		
