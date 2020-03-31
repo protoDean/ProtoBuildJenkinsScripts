@@ -61,8 +61,10 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
 		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
-			sh "/usr/bin/git fetch --all https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git lfs install"
+			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 			sh "/usr/bin/git checkout -f ${sourceBranch}"
+			sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 		}
 		
 		
@@ -89,8 +91,8 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		return
 	}
 
-	//print("Skipping the rest for now");
-	//return;
+	print("Skipping the rest for now");
+	return;
 
 	final ARCHIVE_POST_FIX = "_Archive"
 

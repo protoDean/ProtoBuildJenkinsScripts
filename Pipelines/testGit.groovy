@@ -10,17 +10,17 @@ node {
     
    	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
-
+		def projectFolder = "ShoutyHeads"
 		//git(url:"https://github.com/protoDean/ShoutyHeads", branch: "master" , credentialsId:"JenkinsGithubLogin")
 		
 		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
 			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 
-		 	sh 'echo uname=$credUser pwd=$credPassword'
-
-		 	sh "/usr/bin/git fetch --all https://${credUser}:${credPassword}@github.com/protoDean/ShoutyHeads"
-		 	sh "/usr/bin/git checkout -f master"
+			sh "/usr/bin/git lfs install"
+			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git checkout -f ${sourceBranch}"
+			sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 		 	
 		 }
 		
