@@ -49,9 +49,14 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	
 	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
+
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
-		git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
+
+		//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
+
+		sh "/usr/bin/git fetch"
+		sh "/usr/bin/git checkout -f ${sourceBranch}"
 	}
 
 	//Update Source
@@ -75,8 +80,8 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		return
 	}
 
-	//print("Skipping the rest for now");
-	//return;
+	print("Skipping the rest for now");
+	return;
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
