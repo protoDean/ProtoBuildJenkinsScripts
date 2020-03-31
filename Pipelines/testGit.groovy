@@ -19,7 +19,7 @@ node {
 
 		 	sh 'echo uname=$credUser pwd=$credPassword'
 
-		 	sh "/usr/bin/git fetch https://${credUser}:${credPasswork}@github.com/protoDean/ShoutyHeads"
+		 	sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/ShoutyHeads"
 		 	sh "/usr/bin/git checkout -f master"
 		 	
 		 }
