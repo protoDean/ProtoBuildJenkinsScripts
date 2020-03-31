@@ -11,16 +11,17 @@ node {
    	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
 
-		git(url:"https://github.com/protoDean/ShoutyHeads", branch: "master" , credentialsId:"JenkinsGithubLogin")
+		//git(url:"https://github.com/protoDean/ShoutyHeads", branch: "master" , credentialsId:"JenkinsGithubLogin")
 		
 		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
-		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) {
+			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		{
 
 		 	sh 'echo uname=$credUser pwd=$credPassword'
 
 		 	sh "/usr/bin/git fetch https://${credUser}:${credPasswork}@github.com/protoDean/ShoutyHeads"
 		 	sh "/usr/bin/git checkout -f master"
-		 	}
+		 	
 		 }
 		
 	}
