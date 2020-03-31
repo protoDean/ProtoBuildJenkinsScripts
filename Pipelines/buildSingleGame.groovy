@@ -60,7 +60,7 @@ node{
 					//No new changes
 					def attachments = [
 									[
-										text: "Doing a single build of ${projectFolder} (${game.sourceBranch}} on ${env.target}" ,
+										text: "Doing a single build of ${env.projectFolder} (${game.sourceBranch}} on ${env.target}" ,
 										color: '#00aa00'
 									]
 								]

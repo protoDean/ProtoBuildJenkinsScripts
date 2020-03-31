@@ -10,7 +10,8 @@ node {
     
    	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
-		def projectFolder = "ShoutyHeads"
+		def projectFolder = env.projectFolder
+		def sourceBranch = env.sourceBranch
 		//git(url:"https://github.com/protoDean/ShoutyHeads", branch: "master" , credentialsId:"JenkinsGithubLogin")
 		
 		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
