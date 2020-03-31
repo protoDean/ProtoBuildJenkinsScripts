@@ -19,7 +19,7 @@ node {
 		{
 
 			//sh "/usr/bin/git lfs install"
-			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 			//sh "/usr/bin/git checkout -f -b ${sourceBranch} origin/${sourceBranch}"
 			//sh "/usr/bin/git pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 			sh "/usr/bin/git reset --hard origin/${sourceBranch}" 

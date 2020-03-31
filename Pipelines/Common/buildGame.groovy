@@ -59,7 +59,7 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 			//sh "/usr/bin/git lfs install"
-			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
 			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 
