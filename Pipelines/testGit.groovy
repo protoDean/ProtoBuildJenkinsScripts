@@ -20,7 +20,7 @@ node {
 
 			sh "/usr/bin/git lfs install"
 			sh "/usr/bin/git fetch https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
-			sh "/usr/bin/git checkout -f ${sourceBranch}"
+			sh "/usr/bin/git checkout -f origin/${sourceBranch}"
 			sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 		 	
 		 }
