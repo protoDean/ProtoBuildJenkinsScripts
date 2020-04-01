@@ -25,8 +25,14 @@ node {
 			//sh "/usr/bin/git reset --hard origin/${sourceBranch}" 
 			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 
+//Still doesnt update properly
+			//sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+			//	"/usr/bin/git reset --hard origin/${sourceBranch} &&" +
+			//	"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+			//	"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+
 			sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
-				"/usr/bin/git reset --hard origin/${sourceBranch} &&" +
+				"/usr/bin/git checkout -f -B {sourceBranch} origin/${sourceBranch} &&" +
 				"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
 				"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 		 	
