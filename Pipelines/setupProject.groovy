@@ -23,10 +23,14 @@ node{
 		
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
 			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			sh "/usr/bin/git init ${env.PROJECT_PATH}/${projectFolder}"
 
-			sh "/usr/bin/git clone https://${credUser}:${credPassword}@github.com/protoDean/${sourceProject} ${env.PROJECT_PATH}/${projectFolder}"
+			dir(path: "${env.PROJECT_PATH}/${projectFolder}")
+			{
+				sh "/usr/bin/git lfs intstall"
+				sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*"
+			}
 
-			//Set it back to the non passwork version.
 			sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${sourceProject}" 
 		}
 		
