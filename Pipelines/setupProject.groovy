@@ -27,7 +27,7 @@ node{
 
 			dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 			{
-				sh "/usr/bin/git lfs intstall"
+				sh "/usr/bin/git lfs install"
 				sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*"
 			}
 
