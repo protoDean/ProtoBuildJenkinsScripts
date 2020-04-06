@@ -63,10 +63,19 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
 			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
 
-			sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+			sh "/usr/bin/git remote --set-url origin https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+				"/usr/bin/git fetch --tags --force origin &&" +
 				"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 				"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
 				"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+
+
+			//Set it back to the non passwork version.
+			sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
+
+			echo "Most recent commit \n"
+			echo runShell("/usr/bin/git log -1 --oneline")
+			
 		}
 		
 		
