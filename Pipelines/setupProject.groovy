@@ -9,7 +9,7 @@ node{
 
 		//Update Source
 	// https://github.com/protoDean/${projectFolder}.git
-	sh "/usr/bin/git clone https://github.com/protoDean/${sourceProject}.git ${env.PROJECT_PATH}/${projectFolder}"
+	//sh "/usr/bin/git clone https://github.com/protoDean/${sourceProject}.git ${env.PROJECT_PATH}/${projectFolder}"
 	
 	
 
