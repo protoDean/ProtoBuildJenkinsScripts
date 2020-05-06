@@ -1,15 +1,17 @@
 import java.text.SimpleDateFormat 
 import java.util.Date
 
+def GetUniqueTargetId( targetSetting)
+{
+	return targetSetting.target + "_" + targetSetting.profile
+}
 
-
-def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResult , dailyBuildFolder ) {
+def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) {
     
 	String projectFolder = game.projectName 
 	String sourceBranch = game.sourceBranch  
 	String paramUnityVersion = game.unityVersion
-	String target = targetSetting.id
-	int buildLevel = targetSetting.buildLevel
+	
 
 	//How long before timeout.
 	int timeoutMins = 35
@@ -23,10 +25,14 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	final TARGET_ANDROID = "Android"
 	final TARGET_IOS = "iOS"
 
-	final int 	BUILD_NONE = 0 
-	final int 	BUILD_DEBUG = 1
-	final int 	BUILD_RELEASE = 2
-	final int 	BUILD_RELEASE_UPLOAD = 3
+	final String POST_BUILD_COPY_TO_NETWORK = "copyToNetwork"
+	final String POST_BUILD_UPLOAD = "upload"
+
+	final ARCHIVE_POST_FIX = "_Archive"
+
+	def wereFailures = false;
+	
+	
 
 	final NO_CHANGES_FOUND = "no changes found"
 
@@ -100,27 +106,40 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 	def currentRevision = runShell("/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
 
 
-	if( alwaysBuild == false &&
-		gameTargetResult.changeSet == currentRevision && 
-		gameTargetResult.buildLevel >= buildLevel)
-	{
-		print "Build Skipping " + projectFolder + " " + target + " - No Changes required."
-		return
-	}
+	def lastBuildNumber = null;
 
-	//print("Skipping the rest for now");
-	//return;
+	for (targetSetting in game.targets) 
+	{	
+		if(targetSetting.disable)
+		{
+			print "Skipping " + game.projectName + " " + DailyBuildCode.GetUniqueTargetId(target) + " - Disabled"
+			continue;
+		}
 
-	final ARCHIVE_POST_FIX = "_Archive"
+		print "Doing " + game.projectName + " " + DailyBuildCode.GetUniqueTargetId(target)
+		String target = targetSetting.target
+		def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
 
-	def wereFailures = false;
-       
-        //Grab the build num from the release build, and make the debug build the same. So we can swap between them.
-        def finalBuildNumber = null
-       
-	    
+		final String TARGET_ID = GetUniqueTargetId(targetSetting)
 
-	  
+		//Clean out the folder
+		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
+		{
+			sh "/usr/bin/git clean -d -f"
+		}
+
+
+		if( alwaysBuild == false &&
+			gameTargetResult.changeSet == currentRevision && 
+			gameTargetResult.targetId == TARGET_ID)
+		{
+			print "Build Skipping " + projectFolder + " " + target + " - No Changes required."
+			return
+		}
+
+		//print("Skipping the rest for now");
+		//return;
+
 		def buildPath = "../DailyBuilds/${dailyBuildFolder}"
 
 
@@ -133,111 +152,51 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
             ]
 		
 		def buildProfile 
-		def releaseBuildId = null
+		def buildId = null
 		def archivePath = null
 		def xCodePath = null
         
-		if(buildLevel >= BUILD_RELEASE)
+		try
 		{
-			try
-			{
-				buildProfile = (target == TARGET_ANDROID ? PROFILE_ANDROID_RELEASE : PROFILE_IOS_RELEASE)
-				stage( projectFolder + "-" + buildProfile) {
-					timeout(timeoutMins) 
-					{
-						def finalBuildResult = build job: 'UnityBuild', parameters: commonParams + [
-							[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile ] 
-							
-							], propagate: true, wait: true
-							
-							
-						finalBuildNumber = "" + finalBuildResult.number
-
-						def envVariables = finalBuildResult.getBuildVariables();
-						//print "${j1EnvVariables}" 
-
-						releaseBuildId = envVariables.unityBuildId;
-
-						//If successful we want to stash the build artifact somewhere
-						if(target == TARGET_ANDROID)
-						{
-							archivePath = "${buildPath}/${releaseBuildId}"
-							sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-							sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
-						}
-
-						else if(target == TARGET_IOS)
-						{
-							//Removed archiving for now.
-							//xCodePath = "${buildPath}/${releaseBuildId}"
-							//archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
-							//iOS - archive it.
-							//sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${releaseBuildId}.xcarchive -configuration Release -scheme Unity-iPhone"
-						}
-
-						//sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-						//sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
-					}
-					
-				}
-			}
-			catch(e) {
-				wereFailures = true
-				echo e.toString()  
-			}
-		}
-
-		if(buildLevel >= BUILD_DEBUG)
-		{	
-			try
-			{
-				buildProfile =  (target == TARGET_ANDROID ? PROFILE_ANDROID_DEBUG : PROFILE_IOS_DEBUG)
-				stage(projectFolder + "-" + buildProfile) 
+			
+			stage( projectFolder + "-" +  targetSetting.buildProfile) {
+				timeout(timeoutMins) 
 				{
-					timeout(timeoutMins) 
+					def buildParams = commonParams + [
+						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
+
+//Can override build num with this:
+//						buildParams = buildParams + 
+//							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: lastBuildNumber]]
+
+					def finalBuildResult = build job: 'UnityBuild', parameters: buildParams, propagate: true, wait: true
+						
+						
+					lastBuildNumber = "" + finalBuildResult.number
+
+					def envVariables = finalBuildResult.getBuildVariables();
+					//print "${j1EnvVariables}" 
+
+					buildId = envVariables.unityBuildId;
+
+					if(target == TARGET_ANDROID)
 					{
-						def buildParams = commonParams + [
-							[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
-							
-
-						//override build num if we did a release
-						if(finalBuildNumber)
-						{
-							buildParams = buildParams + 
-								[[$class: 'StringParameterValue', name: 'buildNumOverride', value: finalBuildNumber]]
-						}
-
-						def finalBuildResult = build job: 'UnityBuild',  parameters: buildParams, propagate: true, wait: true
-
-						def envVariables = finalBuildResult.getBuildVariables();
-						def debugBuildId = envVariables.unityBuildId;
-
-						def slackButton = ""
-						if(target == TARGET_ANDROID)
-						{
-							//Add a little bat to deploy it.
-							writeFile(file:"${buildPath}/${debugBuildId}/deployWindows.bat" , text : "D:\\android\\sdk\\platform-tools\\adb.exe install -r build.apk\npause")
-
-							//Copy the apk too
-							archivePath = "${buildPath}/${debugBuildId}"
-							sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-							sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
-
-							slackButton = "(${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${debugBuildId})"
-						}
+						//Add a little bat to deploy it.
+						writeFile(file:"${buildPath}/${buildId}/deployWindows.bat" , text : "D:\\android\\sdk\\platform-tools\\adb.exe install -r build.apk\npause")
 					}
+
 				}
-			}
-			catch(e) {
-				wereFailures = true
-				echo e.toString()  
+				
 			}
 		}
+		catch(e) {
+			wereFailures = true
+			echo e.toString()  
+		}
 
-		
 		if(wereFailures == false)
 		{
-			gameTargetResult.buildLevel = buildLevel
+			gameTargetResult.targetId = TARGET_ID
 			gameTargetResult.changeSet = currentRevision
 			gameTargetResult.lastBuildResult = "Success"
 		}
@@ -246,53 +205,55 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 			gameTargetResult.lastBuildResult = "Failed"
 		}
 		
-
-		if(buildLevel >= BUILD_RELEASE_UPLOAD)
+		//Post Build Tasks.
+		if(targetSetting.postBuild.indexOf(POST_BUILD_COPY_TO_NETWORK) != -1)
 		{
-			print("Uploading Build! Not currently working sorry.");
-			try
+			//If successful we want to stash the build artifact somewhere
+			if(target == TARGET_ANDROID)
 			{
-				stage(projectFolder + "-Upload") 
-				{
-					timeout(timeoutMins) 
-					{
-						if(releaseBuildId)
-						{
-							print("Uploading at " + "DailyBuild" + currentBuild.number + "/" + releaseBuildId)
-
-							//iOS - 
-							if(target == TARGET_ANDROID)
-							{
-								print("Hmmm... not sure how to upload an android build.")
-							}
-							else if(target == TARGET_IOS)
-							{
-								//iOS - archive it.
-								print("xCode Exporting ipa")
-								sh "xcodebuild -exportArchive -allowProvisioningUpdates -archivePath ${archivePath}/${releaseBuildId}.xcarchive -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${archivePath}/Ipa"
-
-
-								print("xCode Uploading ipa")
-								//altool --upload-app -f "CLI.ipa" -u $USERNAME -p $PASSWORD
-							}
-						}
-						else
-						{
-							print("Build id not set. Must have failed")
-							sh "exit 1"
-						}
-					}
-				}
+				archivePath = "${buildPath}/${buildId}"
+				sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+				sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
 			}
-			catch(e) {
-				wereFailures = true
-				echo e.toString()  
+			else if(target == TARGET_IOS)
+			{
+				//Removed archiving for now.
+				//xCodePath = "${buildPath}/${buildId}"
+				//archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
+				//iOS - archive it.
+				//sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${buildId}.xcarchive -configuration Release -scheme Unity-iPhone"
 			}
 		}
 
-        //rename folder
-        //sh "mv -v " + DAILY_BUILD_TEMP + " " + dailyBuildFolder
-        //Upload Release build if neccessary.
+
+		if(targetSetting.postBuild.indexOf(POST_BUILD_UPLOAD) != -1)
+		{
+			//If successful we want to stash the build artifact somewhere
+			if(target == TARGET_ANDROID)
+			{
+				//How to upload!
+			}
+			else if(target == TARGET_IOS)
+			{
+				stage(projectFolder + "-Upload") 
+				{
+					try
+					{
+						//How to upload?
+						print("xCode Exporting ipa")
+						sh "xcodebuild -exportArchive -allowProvisioningUpdates -archivePath ${archivePath}/${releaseBuildId}.xcarchive -exportOptionsPlist ${xCodePath}/exportOptions.plist -exportPath ${archivePath}/Ipa"
+
+
+						print("xCode Uploading ipa")
+					}
+					catch(e) {
+						wereFailures = true
+						echo e.toString()  
+					}
+				}
+			}
+		}
+	}
 }
 
 def runShell(String command){
