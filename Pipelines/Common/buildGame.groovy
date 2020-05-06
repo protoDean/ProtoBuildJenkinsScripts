@@ -150,10 +150,11 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
             [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
             [$class: 'StringParameterValue', name: 'buildPath', value: buildPath],
-			[$class: 'StringParameterValue', name: 'unityBuildTarget', value: target] 
+			[$class: 'StringParameterValue', name: 'unityBuildTarget', value: target],
+			[$class: 'StringParameterValue', name: 'buildProfile', value: targetSetting.buildProfile] 
             ]
 		
-		def buildProfile 
+		
 		def buildId = null
 		def archivePath = null
 		def xCodePath = null
@@ -164,8 +165,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			stage( projectFolder + "-" +  targetSetting.buildProfile) {
 				timeout(timeoutMins) 
 				{
-					def buildParams = commonParams + [
-						[$class: 'StringParameterValue', name: 'buildProfile', value: buildProfile]]
+					def buildParams = commonParams 
 
 //Can override build num with this:
 //						buildParams = buildParams + 
