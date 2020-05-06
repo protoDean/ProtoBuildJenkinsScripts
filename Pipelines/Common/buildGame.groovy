@@ -110,17 +110,19 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	for (targetSetting in game.targets) 
 	{	
+		final String TARGET_ID = GetUniqueTargetId(targetSetting)
+
 		if(targetSetting.disable || game.disable )
 		{
-			print "Skipping " + game.projectName + " " + GetUniqueTargetId(target) + " - Disabled"
+			print "Skipping " + game.projectName + " " + TARGET_ID + " - Disabled"
 			continue;
 		}
 
-		print "Doing " + game.projectName + " " + GetUniqueTargetId(target)
+		print "Doing " + game.projectName + " " + TARGET_ID
 		String target = targetSetting.target
 		def gameTargetResult = GetTargetResults(target.id , gameResult)
 
-		final String TARGET_ID = GetUniqueTargetId(targetSetting)
+		
 
 		//Clean out the folder
 		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
