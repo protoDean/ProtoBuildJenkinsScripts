@@ -46,8 +46,6 @@ node {
 	
 	
 
-	//slackSend(channel: "#builds" , color : "good" , message : "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}/console|Open>)")
-
 	//Clear the file
 	writeFile(file:"testFile.txt" , text : "")
 
@@ -60,16 +58,6 @@ node {
 	def output = readFile(file: "testFile.txt");
 
 	print output
-
-	def attachments = [
-		[
-			text: output , //'I find your lack of faith disturbing!',
-			fallback: 'Hey, Vader seems to be mad at you.',
-			color: '#ff0000'
-		]
-	]
-	//slackSend( attachments: attachments)
-
 
 	blocks = [
 	[
@@ -95,8 +83,6 @@ node {
 			]
 		]
 	]
-	//THis requires a custom bot.
-	//slackSend( blocks: blocks)
 
 
 	//didnt work

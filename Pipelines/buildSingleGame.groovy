@@ -56,16 +56,6 @@ node{
 				if(target.id == env.target)
 				{
 					def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
-					
-					//No new changes
-					def attachments = [
-									[
-										text: "Doing a single build of ${env.projectFolder} (${game.sourceBranch}} on ${env.target}" ,
-										color: '#00aa00'
-									]
-								]
-
-					slackSend( attachments: attachments )
 
 					if(buildLevel >= 0)
 					{
@@ -81,14 +71,6 @@ node{
 	}
 
 	def resultsJson = JsonOutput.toJson(buildResults)
-	def attachments = [
-									[
-										text: resultsJson ,
-										color: '#00aa00'
-									]
-								]
-
-					slackSend( attachments: attachments )
 
 	print resultsJson
 	//Now write the result.

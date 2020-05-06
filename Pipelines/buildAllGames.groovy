@@ -40,17 +40,6 @@ node{
 			output += "]\n"
 		}
 
-		slackSend( attachments: [
-			[
-				text: output ,
-				color: '#00aa00'
-			],
-			[
-				text: "View on <${env.BUILD_URL}|Jenkins>" ,
-				color: '#00aa00'
-			]])
-
-
 	print "Using settings: " + file.text
 
 	def dateFormat = new SimpleDateFormat("yyyy-MMdd-HHmm")
@@ -75,13 +64,6 @@ node{
 		}
 
 	def resultsJson = JsonOutput.toJson(buildResults)
-
-	slackSend( attachments:  [
-									[
-										text: resultsJson ,
-										color: '#00aa00'
-									]
-								] )
 
 	print resultsJson
 	//Now write the result.

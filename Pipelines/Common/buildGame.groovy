@@ -177,16 +177,6 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 						//sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
 						//sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
-
-						def attachments = [
-							[
-								text: releaseBuildId + " Success! (${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${releaseBuildId})" ,
-								color: '#00aa00'
-							]
-						]
-						slackSend( attachments: attachments)
-
-
 					}
 					
 				}
@@ -194,16 +184,6 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 			catch(e) {
 				wereFailures = true
 				echo e.toString()  
-
-				def attachments = [
-						[
-							text: projectFolder + "-" + buildProfile + " Failed! (<${env.BUILD_URL}|Open>)" ,
-							color: '#ff0000'
-						]
-					]
-
-				slackSend( attachments: attachments )
-				//slackSend( attachments: attachments , channel : "general" )
 			}
 		}
 
@@ -245,29 +225,12 @@ def DoGamePlatform(game , targetSetting  , boolean alwaysBuild , gameTargetResul
 
 							slackButton = "(${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/${debugBuildId})"
 						}
-
-						def attachments = [
-							[
-								text: debugBuildId + " Success! "+ slackButton  ,
-								color: '#00aa00'
-							]
-						]
-						slackSend( attachments: attachments)
 					}
 				}
 			}
 			catch(e) {
 				wereFailures = true
 				echo e.toString()  
-
-					def attachments = [
-						[
-							text: projectFolder + "-" + buildProfile + " Failed! (<${env.BUILD_URL}|Open>)" ,
-							color: '#ff0000'
-						]
-					]
-					
-				slackSend( attachments: attachments )
 			}
 		}
 
