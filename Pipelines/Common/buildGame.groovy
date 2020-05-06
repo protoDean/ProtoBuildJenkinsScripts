@@ -3,7 +3,7 @@ import java.util.Date
 
 def GetUniqueTargetId( targetSetting)
 {
-	return targetSetting.target + "_" + targetSetting.profile
+	return targetSetting.target + "_" + targetSetting.buildProfile
 }
 
 def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) {
