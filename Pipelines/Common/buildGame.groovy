@@ -120,7 +120,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 		print "Doing " + game.projectName + " " + TARGET_ID
 		String target = targetSetting.target
-		def gameTargetResult = GetTargetResults(target.id , gameResult)
+		def gameTargetResult = GetTargetResults(targetSetting.target , gameResult)
 
 		
 
