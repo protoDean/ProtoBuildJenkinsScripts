@@ -41,12 +41,12 @@ node{
 	}
 
 	//Format results better.
-	def resultsJson = JsonOutput.toJson(buildResults)
+	//def resultsJson = JsonOutput.toJson(buildResults)
 
-	print resultsJson
+	//print resultsJson
 	//Now write the result.
-	writeFile(file:BUILD_RESULTS , text : resultsJson )
+	//writeFile(file:BUILD_RESULTS , text : resultsJson )
 
-	currentBuild.description = resultsJson
+	//currentBuild.description = resultsJson
 
 }
