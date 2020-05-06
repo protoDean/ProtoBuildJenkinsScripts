@@ -36,20 +36,14 @@ node{
 
 	for (game in dailyBuildSettings.games) 
 	{
-		if(game.disabled == false)
-		{
-			def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
-			DailyBuildCode.DoGamePlatform( game ,  true ,  gameResult , dailyBuildFolder)
-
-		}
-		else
-		{
-			print "skipping " + game.projectName + " - Is Disabled"
-		}
+		def gameResult = DailyBuildCode.GetGameResults(game , buildResults)
+		DailyBuildCode.DoGamePlatform( game ,  true ,  gameResult , dailyBuildFolder)
 	}
 
 	//Format results better.
-	def slimResults = {}
+	def slimResults = new {
+		"results" : "Some Results"
+	}
 	
 
 	def resultsJson = JsonOutput.toJson(slimResults)

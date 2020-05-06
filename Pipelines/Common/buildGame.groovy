@@ -110,7 +110,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	for (targetSetting in game.targets) 
 	{	
-		if(targetSetting.disable)
+		if(targetSetting.disable || game.disable )
 		{
 			print "Skipping " + game.projectName + " " + DailyBuildCode.GetUniqueTargetId(target) + " - Disabled"
 			continue;
