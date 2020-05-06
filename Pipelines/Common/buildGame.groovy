@@ -112,13 +112,13 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	{	
 		if(targetSetting.disable || game.disable )
 		{
-			print "Skipping " + game.projectName + " " + DailyBuildCode.GetUniqueTargetId(target) + " - Disabled"
+			print "Skipping " + game.projectName + " " + GetUniqueTargetId(target) + " - Disabled"
 			continue;
 		}
 
-		print "Doing " + game.projectName + " " + DailyBuildCode.GetUniqueTargetId(target)
+		print "Doing " + game.projectName + " " + GetUniqueTargetId(target)
 		String target = targetSetting.target
-		def gameTargetResult = DailyBuildCode.GetTargetResults(target.id , gameResult)
+		def gameTargetResult = GetTargetResults(target.id , gameResult)
 
 		final String TARGET_ID = GetUniqueTargetId(targetSetting)
 
