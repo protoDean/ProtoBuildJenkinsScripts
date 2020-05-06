@@ -41,12 +41,7 @@ node{
 	}
 
 	//Format results better.
-	def slimResults = new {
-		"results" : "Some Results"
-	}
-	
-
-	def resultsJson = JsonOutput.toJson(slimResults)
+	def resultsJson = JsonOutput.toJson(buildResults)
 
 	print resultsJson
 	//Now write the result.
