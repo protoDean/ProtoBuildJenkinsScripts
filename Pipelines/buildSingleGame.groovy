@@ -23,7 +23,14 @@ node{
 		String txt = readFile(file : BUILD_RESULTS) 
 		print "Existing Build Results: \n " + txt
 
-		buildResults = new JsonSlurperClassic().parseText(txt )
+		if(txt != null)
+		{
+			buildResults = new JsonSlurperClassic().parseText(txt )
+		}
+		else
+		{
+			buildResults = [ games: [] ]
+		}
 	}
 	else
 	{
