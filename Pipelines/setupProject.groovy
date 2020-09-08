@@ -35,7 +35,7 @@ node{
 			//Set it back to the non passwork version.
 			//sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
 
-			sh "git clone --recurse-submodules https://${credUser}:${credPassword}@github.com/protoDean/${sourceProject} ${sourceProject}"
+			sh "git clone --recurse-submodules --remote-submodules https://${credUser}:${credPassword}@github.com/protoDean/${sourceProject} ${sourceProject}"
 				
 
 			echo "Most recent commit \n"
