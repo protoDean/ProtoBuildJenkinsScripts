@@ -17,9 +17,9 @@ node{
 
 		//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
 		
-		//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
-		//usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
-		//{
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
+			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		{
 			//sh "/usr/bin/git lfs install"
 		
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
@@ -34,14 +34,14 @@ node{
 
 			//Set it back to the non passwork version.
 			//sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
-
-			sh "git clone --recurse-submodules --remote-submodules https://protostarBuildMachine@github.com/protoDean/${sourceProject} ${sourceProject}"
+			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
+			echo runShell("git clone --recurse-submodules --remote-submodules https://protostarBuildMachine@github.com/protoDean/${sourceProject} ${sourceProject}")
 				
 
 			echo "Most recent commit \n"
 			echo runShell("/usr/bin/git log -1 --oneline")
 			
-		//}
+		}
 	}
 
 	dir(path: "${env.PROJECT_PATH}/${sourceProject}")
