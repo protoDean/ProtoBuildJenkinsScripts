@@ -19,7 +19,7 @@ node{
 		
 		//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
 		//usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
-		{
+		//{
 			//sh "/usr/bin/git lfs install"
 		
 			//sh "/usr/bin/git checkout -f ${sourceBranch}"
@@ -41,7 +41,7 @@ node{
 			echo "Most recent commit \n"
 			echo runShell("/usr/bin/git log -1 --oneline")
 			
-		}
+		//}
 	}
 
 	dir(path: "${env.PROJECT_PATH}/${sourceProject}")
