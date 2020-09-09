@@ -15,7 +15,9 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	//How long before timeout.
 	int timeoutMins = 35
-	
+
+	//jenkins user for github. must have credentials in the keychain
+	final JENKINS_GITHUB_USER = "protostarBuildMachine"	
 
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -61,27 +63,15 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 		//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
 		
-		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsGithubLogin',
-		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
+			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
-			//sh "/usr/bin/git lfs install"
-		
-			//sh "/usr/bin/git checkout -f ${sourceBranch}"
-			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+			//unlock keychain for git credentials to work
+			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
 
-			//sh "/usr/bin/git remote --set-url origin https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
-			//	"/usr/bin/git fetch --tags --force origin &&" +
-			//	"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
-			//	"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
-			//	"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-
-
-			//Set it back to the non passwork version.
-			//sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
-
-				sh "/usr/bin/git fetch --tags --force https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			sh "/usr/bin/git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
-				"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+				"/usr/bin/git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
 				"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 				
 
