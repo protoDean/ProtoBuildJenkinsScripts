@@ -293,12 +293,12 @@ def runShell(String command){
 
     def output =  readFile(file: "tmp.txt")
 	
-   // if (responseCode != 0){
-   //   println "[ERROR] ${output}"
-   //   throw new Exception("${output}")
-   // }else{
+    if (responseCode != 0){
+      echo "[ERROR] ${output}"
+     throw new Exception("${output}")
+    }else{
       return "${output}"
-    //}
+    }
 }
 
 
