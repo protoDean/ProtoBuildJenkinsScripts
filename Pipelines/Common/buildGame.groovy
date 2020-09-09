@@ -59,6 +59,41 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	def infoLastCommit = "Unknown"
 
+
+	//Super test
+	dir(path: "${env.PROJECT_PATH}")
+	{
+
+		//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
+		
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
+			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		{
+			//sh "/usr/bin/git lfs install"
+		
+			//sh "/usr/bin/git checkout -f ${sourceBranch}"
+			//sh "/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder}"
+
+			//sh "/usr/bin/git remote --set-url origin https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+			//	"/usr/bin/git fetch --tags --force origin &&" +
+			//	"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
+			//	"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
+			//	"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+
+
+			//Set it back to the non passwork version.
+			//sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
+			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
+			echo runShell("git clone --recurse-submodules --remote-submodules https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} ${projectFolder}")
+				
+
+			
+			
+		}
+	}
+
+	return
+
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
 
@@ -81,6 +116,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			//	"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 			//	"/usr/bin/git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
 			//	"/usr/bin/git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+
+			echo "GigitResulttResult is " + gitResult
 
 			if(gitResult.indexOf("fatal") >= 0)
 			{
