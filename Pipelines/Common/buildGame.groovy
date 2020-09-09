@@ -88,6 +88,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
 			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
+			runShell("git submodule update --init --recursive")
 			runShell("git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder}")
 			
 
