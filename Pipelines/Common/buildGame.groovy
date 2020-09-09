@@ -84,12 +84,12 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
 
-			echo runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			def gitResult = runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 				"git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
 				"git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 
-			echo "GigitResulttResult is " + gitResult
+			echo "GitResult is " + gitResult
 
 			if(gitResult.indexOf("fatal") >= 0)
 			{
