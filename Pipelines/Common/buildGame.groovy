@@ -91,14 +91,14 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			echo "GitResult is " + gitResult
 
-			if(gitResult.indexOf("fatal") >= 0)
-			{
-				//Error with git
-				buildDescription += "Error with Git \n" + gitResult
-				currentBuild.description = buildDescription
+			// if(gitResult.indexOf("fatal") >= 0)
+			// {
+			// 	//Error with git
+			// 	buildDescription += "Error with Git \n" + gitResult
+			// 	currentBuild.description = buildDescription
 
-				error("Error with Git " + gitResult )
-			}	
+			// 	error("Error with Git " + gitResult )
+			// }	
 
 			
 			infoLastCommit =  runShell("/usr/bin/git log -1 --oneline")
