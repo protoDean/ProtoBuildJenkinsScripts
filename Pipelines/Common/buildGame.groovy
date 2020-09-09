@@ -76,10 +76,11 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 				"/usr/bin/git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 				
 
-			echo "Most recent commit \n"
+			
 			infoLastCommit =  runShell("/usr/bin/git log -1 --oneline")
 
-			echo info infoLastCommit
+			echo "Most recent commit \n"
+			echo infoLastCommit
 
 			buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
 			
