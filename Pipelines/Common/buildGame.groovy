@@ -57,7 +57,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	
 	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
-	def infoLastCommit = "Unknown"
+	String infoLastCommit = "Unknown"
 
 
 	//Maybe should clone if not existing 
@@ -84,7 +84,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
 
-			def gitResult = runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			String gitResult = runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 				"git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
 				"git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
