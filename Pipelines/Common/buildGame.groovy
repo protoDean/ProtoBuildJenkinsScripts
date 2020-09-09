@@ -70,11 +70,26 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			//unlock keychain for git credentials to work
 			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
 
-			echo runShell("/usr/bin/git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			//Try without user
+			def gitResult =	echo runShell("/usr/bin/git fetch --tags --force https://github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
-				"/usr/bin/git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
+				"/usr/bin/git lfs pull https://github.com/protoDean/${projectFolder} &&" +
 				"/usr/bin/git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-				
+
+
+			//echo runShell("/usr/bin/git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			//	"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
+			//	"/usr/bin/git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
+			//	"/usr/bin/git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+
+			if(gitResult.indexOf("fatal") >= 0)
+			{
+				//Error with git
+				buildDescription += "Error with Git \n" + gitResult
+				currentBuild.description = buildDescription
+
+				error("Error with Git " + gitResult )
+			}	
 
 			
 			infoLastCommit =  runShell("/usr/bin/git log -1 --oneline")
