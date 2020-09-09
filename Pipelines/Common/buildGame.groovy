@@ -86,12 +86,12 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			String gitResult = ""
 
-			gitResult = runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
+			echo runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 				"git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
 				"git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 
-			echo "GitResult is " + gitResult
+			//echo "GitResult is " + gitResult
 
 			// if(gitResult.indexOf("fatal") >= 0)
 			// {
@@ -103,10 +103,9 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			// }	
 
 			
-			infoLastCommit =  runShell("/usr/bin/git log -1 --oneline")
+			infoLastCommit =  runShell("git log -1 --oneline")
 
-			echo "Most recent commit \n"
-			echo infoLastCommit
+			echo "Most recent commit: \n" + infoLastCommit
 
 			buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
 			
