@@ -86,10 +86,10 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			String gitResult = ""
 
-			sh "git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
-				"git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
-				"git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
-				"git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
+			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
+			runShell("git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder}")
+			
 
 			//echo "GitResult is " + gitResult
 
@@ -151,6 +151,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		//Clean out the folder
 		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 		{
+			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 			sh "/usr/bin/git clean -d -f"
 		}
 
