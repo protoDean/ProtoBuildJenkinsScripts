@@ -73,7 +73,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			echo runShell("/usr/bin/git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/* &&" +
 				"/usr/bin/git checkout -f -B ${sourceBranch} origin/${sourceBranch} &&" +
 				"/usr/bin/git lfs pull https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} &&" +
-				"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+				"/usr/bin/git clean -d -f")		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 				
 
 			echo "Most recent commit \n"
