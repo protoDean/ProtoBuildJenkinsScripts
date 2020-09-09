@@ -34,7 +34,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	def wereFailures = false;
 	
-	
+	def buildDescription = "Building ${projectFolder} at branch ${sourceBranch} with ${paramUnityVersion}"
 
 	final NO_CHANGES_FOUND = "no changes found"
 
@@ -57,6 +57,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	
 	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
+	def infoLastCommit = "Unknown"
 
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
@@ -76,7 +77,11 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 				
 
 			echo "Most recent commit \n"
-			echo runShell("/usr/bin/git log -1 --oneline")
+			infoLastCommit =  runShell("/usr/bin/git log -1 --oneline")
+
+			echo info infoLastCommit
+
+			buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
 			
 		}
 		
@@ -98,6 +103,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	def lastBuildNumber = null;
 
+	buildDescription += "Targets: \n"
+
 	for (targetSetting in game.targets) 
 	{	
 		final String TARGET_ID = GetUniqueTargetId(targetSetting)
@@ -112,6 +119,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		String target = targetSetting.target
 		def gameTargetResult = GetTargetResults(targetSetting.target , gameResult)
 
+		
 		
 
 		//Clean out the folder
@@ -131,6 +139,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 		//print("Skipping the rest for now");
 		//return;
+
+		buildDescription += TARGET_ID + ":"
 
 		def buildPath = "../DailyBuilds/${dailyBuildFolder}"
 
@@ -196,6 +206,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		{
 			gameTargetResult.lastBuildResult = "Failed"
 		}
+
+		buildDescription += gameTargetResult.lastBuildResult + "\n"
 		
 		//Post Build Tasks.
 		if(targetSetting.postBuild.indexOf(POST_BUILD_COPY_TO_NETWORK) != -1)
@@ -246,6 +258,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			}
 		}
 	}
+
+	currentBuild.description = buildDescription
 }
 
 def runShell(String command){
