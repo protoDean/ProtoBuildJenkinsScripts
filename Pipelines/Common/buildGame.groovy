@@ -154,6 +154,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		{
 			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 			sh "/usr/bin/git clean -d -f"
+
+			sh "/usr/bin/git submodule foreach --recursive git clean -xfd"
 		}
 
 
