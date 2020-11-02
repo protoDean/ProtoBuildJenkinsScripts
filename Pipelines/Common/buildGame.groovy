@@ -13,7 +13,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	String paramUnityVersion = game.unityVersion
 	
 
-	final KEYCHAIN_ID = "jenkinsKeychain.keychain"
+	final KEYCHAIN_ID = "/Users/Shared/Jenkins/Home/Provisioning/jenkinsKeychain.keychain"
 	//How long before timeout.
 	int timeoutMins = 35
 
