@@ -9,6 +9,8 @@ node{
 
 	//jenkins user for github. must have credentials in the keychain
 	final JENKINS_GITHUB_USER = "protostarBuildMachine"	
+	final KEYCHAIN_ID = "jenkinsKeychain.keychain"
+
 		//Update Source
 	// https://github.com/protoDean/${projectFolder}.git
 	//sh "/usr/bin/git clone https://github.com/protoDean/${sourceProject}.git ${env.PROJECT_PATH}/${projectFolder}"
@@ -36,7 +38,7 @@ node{
 
 			//Set it back to the non passwork version.
 			//sh "/usr/bin/git remote --set-url origin https://github.com/protoDean/${projectFolder}" 
-			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
+			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
 			echo runShell("git clone --recurse-submodules --remote-submodules https://${JENKINS_GITHUB_USER}@github.com/protoDean/${sourceProject} ${sourceProject}")
 				
 

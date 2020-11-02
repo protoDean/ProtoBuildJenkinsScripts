@@ -13,6 +13,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	String paramUnityVersion = game.unityVersion
 	
 
+	final KEYCHAIN_ID = "jenkinsKeychain.keychain"
 	//How long before timeout.
 	int timeoutMins = 35
 
@@ -82,7 +83,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 
-			echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
+			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
 
 			String gitResult = ""
 
