@@ -202,7 +202,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 //						buildParams = buildParams + 
 //							[[$class: 'StringParameterValue', name: 'buildNumOverride', value: lastBuildNumber]]
 
-					def finalBuildResult = build job: 'UnityBuild', parameters: buildParams, propagate: true, wait: true
+					def finalBuildResult = build job: 'UnityBuild', parameters: buildParams, propagate: false, wait: true
 						
 						
 					lastBuildNumber = "" + finalBuildResult.number
@@ -227,10 +227,11 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			echo e.toString()  
 		}
 
+		gameTargetResult.targetId = TARGET_ID
+		gameTargetResult.changeSet = currentRevision
+
 		if(wereFailures == false)
 		{
-			gameTargetResult.targetId = TARGET_ID
-			gameTargetResult.changeSet = currentRevision
 			gameTargetResult.lastBuildResult = "Success"
 		}
 		else
