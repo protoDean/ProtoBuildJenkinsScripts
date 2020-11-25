@@ -192,7 +192,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		def archivePath = null
 		def xCodePath = null
         
-		Bool lastBuildResult = true
+		def lastBuildResult = true
 
 		try
 		{
