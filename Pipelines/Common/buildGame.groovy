@@ -157,9 +157,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 		{
 			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-			sh "git clean -d -f"
-
-			sh "git submodule foreach --recursive git clean -xfd"
+			runShell("git clean -d -f")
+			runShell("git submodule foreach --recursive git clean -xfd")
 		}
 
 
@@ -193,6 +192,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		def archivePath = null
 		def xCodePath = null
         
+		Bool lastBuildResult = true
+
 		try
 		{
 			
@@ -227,13 +228,14 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		}
 		catch(e) {
 			wereFailures = true
+			lastBuildResult = false
 			echo e.toString()  
 		}
 
 		gameTargetResult.targetId = TARGET_ID
 		gameTargetResult.changeSet = currentRevision
 
-		if(wereFailures == false)
+		if(lastBuildResult)
 		{
 			gameTargetResult.lastBuildResult = "Success"
 		}
