@@ -129,7 +129,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	// git rev-parse master : Gets the hash of the branch?
 
 	//Check against existing builds.
-	def currentRevision = runShell("/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
+	def currentRevision = runShell("git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
 
 
 	def lastBuildNumber = null;
@@ -157,9 +157,9 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 		{
 			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-			sh "/usr/bin/git clean -d -f"
+			sh "git clean -d -f"
 
-			sh "/usr/bin/git submodule foreach --recursive git clean -xfd"
+			sh "git submodule foreach --recursive git clean -xfd"
 		}
 
 
