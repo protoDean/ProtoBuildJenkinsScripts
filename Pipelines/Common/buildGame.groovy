@@ -18,7 +18,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	int timeoutMins = 35
 
 	//jenkins user for github. must have credentials in the keychain
-	final JENKINS_GITHUB_USER = "protostarBuildMachine"	
+	final JENKINS_GITHUB_USER = "protostarbuildmachine"	
 
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
