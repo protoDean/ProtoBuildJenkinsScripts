@@ -83,6 +83,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 
+			echo runShell("git version");
+			echo runShell("which git");
 			
 			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
 			
