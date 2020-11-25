@@ -78,21 +78,16 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 	{
-		//for https
-		//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
-		//	usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
-		//{
 
-			//for https
-			//echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
+			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		{
+
+			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
 
 			String gitResult = ""
 
-			//git@github.com:protoDean/Starfish.git
-			runShell("git fetch --tags --force git@github.com:protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
-			
-			//By https. Inexplicably stopped working.
-			//runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
+			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
 			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
 			runShell("git submodule update --init --recursive")
 			runShell("git submodule foreach git lfs pull")
@@ -116,7 +111,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 			buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
 			
-		//}
+		}
 		
 		
 	}
