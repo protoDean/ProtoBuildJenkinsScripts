@@ -194,7 +194,6 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		def archivePath = null
 		def xCodePath = null
         
-		def lastBuildResult = true
 
 		def buildResultString = ""
 
@@ -235,8 +234,10 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		catch(e) {
 			//This try catch doesnt seem to work.
 			wereFailures = true
-			lastBuildResult = false
+			
 			echo e.toString()  
+
+			buildResultString = "FAILED IN CATCH"
 		}
 
 
@@ -247,14 +248,9 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		echo "Build Result string:"
 		echo buildResultString
 
-		if(lastBuildResult)
-		{
-			gameTargetResult.lastBuildResult = "Success"
-		}
-		else
-		{
-			gameTargetResult.lastBuildResult = "Failed"
-		}
+	
+		gameTargetResult.lastBuildResult = buildResultString
+		
 
 		buildDescription += gameTargetResult.lastBuildResult + "\n"
 		
