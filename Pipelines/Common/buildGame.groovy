@@ -196,6 +196,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
         
 		def lastBuildResult = true
 
+		def buildResultString = ""
+
 		try
 		{
 			
@@ -224,18 +226,26 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 						writeFile(file:"${buildPath}/${buildId}/deployWindows.bat" , text : "D:\\android\\sdk\\platform-tools\\adb.exe install -r build.apk\npause")
 					}
 
+					buildResultString = finalBuildResult.getCurrentResult() 
+
 				}
 				
 			}
 		}
 		catch(e) {
+			//This try catch doesnt seem to work.
 			wereFailures = true
 			lastBuildResult = false
 			echo e.toString()  
 		}
 
+
+
 		gameTargetResult.targetId = TARGET_ID
 		gameTargetResult.changeSet = currentRevision
+
+		echo "Build Result string:"
+		echo buildResultString
 
 		if(lastBuildResult)
 		{
