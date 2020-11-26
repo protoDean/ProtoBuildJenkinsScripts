@@ -90,6 +90,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			
 			String gitResult = ""
 
+			runShell("git lfs install")
 			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
 			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
 			runShell("git lfs checkout")
