@@ -303,12 +303,21 @@ def runShell(String command){
 
     def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
 
-    def output =  readFile(file: "tmp.txt")
-	
-    if (responseCode != 0){
-      echo "[ERROR] ${output}"
-     throw new Exception("${output}")
-    }else{
+	def output = ""
+	try{
+    	output =  readFile(file: "tmp.txt")
+	}
+	catch(e)
+	{
+		output = "No output, read tmp.txt failed"
+	}
+
+    if (responseCode != 0)
+	{
+      	echo "[ERROR] ${output}"
+     	throw new Exception("${output}")
+    }else
+	{
       return "${output}"
     }
 }
