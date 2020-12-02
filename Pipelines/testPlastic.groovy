@@ -8,7 +8,7 @@ node {
     print currentBuild.getStartTimeInMillis() 
     print currentBuild.number
     
-	final projectPath = env.PROJECT_PATH
+	final projectPath = env.PROJECT_PATH_PLASTIC
 
 	def projectFolder = env.projectFolder
 	def sourceBranch = env.sourceBranch
