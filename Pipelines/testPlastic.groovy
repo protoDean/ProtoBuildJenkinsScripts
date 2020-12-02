@@ -35,7 +35,7 @@ node {
 			//	"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
 			//	"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 
-			runShell("cm");
+			runShell("cm status");
 		 	
 		 }
 		
