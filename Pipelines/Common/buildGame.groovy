@@ -13,12 +13,12 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	String paramUnityVersion = game.unityVersion
 	
 
-	final KEYCHAIN_ID = "/Users/Shared/Jenkins/Home/Provisioning/jenkinsKeychain.keychain"
+	final KEYCHAIN_ID = "login.keychain"  // "/Users/Shared/Jenkins/Home/Provisioning/jenkinsKeychain.keychain"
 	//How long before timeout.
 	int timeoutMins = 35
 
 	//jenkins user for github. must have credentials in the keychain
-	final JENKINS_GITHUB_USER = "protostarBuildMachine"	
+	final JENKINS_GITHUB_USER = "protostarbuildmachine"	
 
    	final PROFILE_IOS_RELEASE = "iosRelease"
 	final PROFILE_IOS_DEBUG = "iosDebug"
@@ -83,12 +83,17 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 		{
 
+			echo runShell("git version");
+			echo runShell("which git");
+			
 			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
-
+			
 			String gitResult = ""
 
+			runShell("git lfs install")
 			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
 			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
+			runShell("git lfs checkout")
 			runShell("git submodule update --init --recursive")
 			runShell("git submodule foreach git lfs pull")
 			
@@ -126,7 +131,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	// git rev-parse master : Gets the hash of the branch?
 
 	//Check against existing builds.
-	def currentRevision = runShell("/usr/bin/git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
+	def currentRevision = runShell("git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
 
 
 	def lastBuildNumber = null;
@@ -154,9 +159,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
 		{
 			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-			sh "/usr/bin/git clean -d -f"
-
-			sh "/usr/bin/git submodule foreach --recursive git clean -xfd"
+			runShell("git clean -d -f")
+			runShell("git submodule foreach --recursive git clean -xfd")
 		}
 
 
@@ -190,6 +194,9 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		def archivePath = null
 		def xCodePath = null
         
+
+		def buildResultString = ""
+
 		try
 		{
 			
@@ -218,26 +225,32 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 						writeFile(file:"${buildPath}/${buildId}/deployWindows.bat" , text : "D:\\android\\sdk\\platform-tools\\adb.exe install -r build.apk\npause")
 					}
 
+					buildResultString = finalBuildResult.getCurrentResult() 
+
 				}
 				
 			}
 		}
 		catch(e) {
+			//This try catch doesnt seem to work.
 			wereFailures = true
+			
 			echo e.toString()  
+
+			buildResultString = "FAILED IN CATCH"
 		}
+
+
 
 		gameTargetResult.targetId = TARGET_ID
 		gameTargetResult.changeSet = currentRevision
 
-		if(wereFailures == false)
-		{
-			gameTargetResult.lastBuildResult = "Success"
-		}
-		else
-		{
-			gameTargetResult.lastBuildResult = "Failed"
-		}
+		echo "Build Result string:"
+		echo buildResultString
+
+	
+		gameTargetResult.lastBuildResult = buildResultString
+		
 
 		buildDescription += gameTargetResult.lastBuildResult + "\n"
 		
@@ -298,12 +311,21 @@ def runShell(String command){
 
     def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
 
-    def output =  readFile(file: "tmp.txt")
-	
-    if (responseCode != 0){
-      echo "[ERROR] ${output}"
-     throw new Exception("${output}")
-    }else{
+	def output = ""
+	try{
+    	output =  readFile(file: "tmp.txt")
+	}
+	catch(e)
+	{
+		output = "No output, read tmp.txt failed"
+	}
+
+    if (responseCode != 0)
+	{
+      	echo "[ERROR] ${output}"
+     	throw new Exception("${output}")
+    }else
+	{
       return "${output}"
     }
 }
