@@ -162,7 +162,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 
         def commonParams = [
-            [$class: 'StringParameterValue', name: 'projectFolder', value: projectFolder],
+            [$class: 'StringParameterValue', name: 'projectPath', value: "${projectPath}/${projectFolder}"],
             [$class: 'StringParameterValue', name: 'sourceBranch', value: sourceBranch],
             [$class: 'StringParameterValue', name: 'unityVersion', value: paramUnityVersion],
             [$class: 'StringParameterValue', name: 'buildPath', value: buildPath],
