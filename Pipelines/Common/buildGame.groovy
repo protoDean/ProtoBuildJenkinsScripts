@@ -101,6 +101,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		}
 		else if (sourceControl == SCM_PLASTIC)
 		{
+			echo runShell("cm undo -r")
 			echo runShell("cm switch ${sourceBranch}");
 			echo runShell("cm update");
 
