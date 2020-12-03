@@ -35,7 +35,14 @@ node {
 			//	"/usr/bin/git lfs pull https://${credUser}:${credPassword}@github.com/protoDean/${projectFolder} &&" +
 			//	"/usr/bin/git clean -d -f"		//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
 
+			//switch branch
+			echo runShell("cm switch ${sourceBranch}");
 			echo runShell("cm update");
+
+			//undo local changes
+			echo runShell("cm undo -r")
+
+			echo runShell("cm status --cset")
 		 	
 		 }
 		

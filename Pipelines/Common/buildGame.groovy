@@ -11,6 +11,31 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 	String projectFolder = game.projectName 
 	String sourceBranch = game.sourceBranch  
 	String paramUnityVersion = game.unityVersion
+
+	final SCM_PLASTIC = "plastic"
+	final SCM_GIT = "git"
+
+	def sourceControl =  game.sourceControl
+
+	if(sourceControl == null)
+	{
+		//fallback to git
+		sourceControl = SCM_GIT
+	}
+
+	String projectPath
+	if(sourceControl == SCM_PLASTIC) 
+	{
+		projectPath = env.PROJECT_PATH_PLASTIC
+	}
+	else if (sourceControl == SCM_GIT)
+	{
+		projectPath = env.PROJECT_PATH
+	}
+	else
+	{
+		throw "Unknown Source Control " + sourceControl
+	}
 	
 
 	final KEYCHAIN_ID = "login.keychain"  // "/Users/Shared/Jenkins/Home/Provisioning/jenkinsKeychain.keychain"
@@ -39,103 +64,52 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	final NO_CHANGES_FOUND = "no changes found"
 
-	
-	/* 
-	//From Local Mercurial
-	//check for incoming
-	//def incoming = runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
-
-	//Update Source
-	sh "/usr/local/bin/hg pull -R ${env.PROJECT_PATH}/${projectFolder}"
-	sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
-
-	//Check against existing builds.
-	def currentRevision = runShell("hg identify -i -R ${env.PROJECT_PATH}/${projectFolder}").trim()
-	*/
-
-	//From GitHub
-	//check for incoming
-	
-	//def incoming = "TODO List incoming Changes" // runShell("hg incoming -R ${env.PROJECT_PATH}/${projectFolder} --branch ${sourceBranch} --template {desc}");
 
 	String infoLastCommit = "Unknown"
+	String currentRevision = "Unknown" 
 
-
-	//Maybe should clone if not existing 
-	// dir(path: "${env.PROJECT_PATH}")
-	// {
-
-	// 	//git(url:"https://github.com/protoDean/${projectFolder}", branch: "${sourceBranch}" , credentialsId:"JenkinsGithubLogin")
-		
-	// 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
-	// 		usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
-	// 	{
-
-	// 		echo runShell("security -v unlock-keychain -p ${credPassword} login.keychain")
-	// 		echo runShell("git clone --recurse-submodules --remote-submodules https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} ${projectFolder}")
-	// 	}
-	// }
-
-	dir(path: "${env.PROJECT_PATH}/${projectFolder}")
+	dir(path: "${projectPath}/${projectFolder}")
 	{
-
-		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
-			usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+		if (sourceControl == SCM_GIT)
 		{
+			withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsLoginPassword',
+				usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
+			{
 
-			echo runShell("git version");
-			echo runShell("which git");
-			
-			echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
-			
-			String gitResult = ""
+				echo runShell("git version");
+				echo runShell("which git");
+				
+				echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
+				
+				String gitResult = ""
 
-			runShell("git lfs install")
-			runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
-			runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
-			runShell("git lfs checkout")
-			runShell("git submodule update --init --recursive")
-			runShell("git submodule foreach git lfs pull")
-			
+				runShell("git lfs install")
+				runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
+				runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
+				runShell("git lfs checkout")
+				runShell("git submodule update --init --recursive")
+				runShell("git submodule foreach git lfs pull")
 
-			//echo "GitResult is " + gitResult
+				infoLastCommit =  runShell("git log -1 --oneline")
 
-			// if(gitResult.indexOf("fatal") >= 0)
-			// {
-			// 	//Error with git
-			// 	buildDescription += "Error with Git \n" + gitResult
-			// 	currentBuild.description = buildDescription
+				echo "Most recent commit: \n" + infoLastCommit
 
-			// 	error("Error with Git " + gitResult )
-			// }	
-
-			
-			infoLastCommit =  runShell("git log -1 --oneline")
-
-			echo "Most recent commit: \n" + infoLastCommit
-
-			buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
-			
+				buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
+				
+				currentRevision = runShell("git -C ${projectPath}/${projectFolder} rev-parse HEAD").trim()
+			}
 		}
-		
-		
+		else if (sourceControl == SCM_PLASTIC)
+		{
+			echo runShell("cm switch ${sourceBranch}");
+			echo runShell("cm update");
+
+			currentRevision = runShell("cm status --cset");
+			infoLastCommit = "Dont know how got get the comment in plastic. For now \n" + currentRevision;
+		}
 	}
 
-	//Update Source
-	// https://github.com/protoDean/${projectFolder}.git
-	//sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git fetch"
-	//sh "cd ${env.PROJECT_PATH}/${projectFolder} && /usr/bin/git checkout -f ${sourceBranch}"
-	//sh "/usr/local/bin/hg update " + sourceBranch + " -R ${PROJECT_PATH}/${projectFolder} -C"
-	// Get the changeset git describe --abbrev=12 --always
-	// git rev-parse HEAD  :Gets the hash of the HEAD, where we are.
-	// git rev-parse master : Gets the hash of the branch?
-
-	//Check against existing builds.
-	def currentRevision = runShell("git -C ${env.PROJECT_PATH}/${projectFolder} rev-parse HEAD").trim()
-
-
 	def lastBuildNumber = null;
-
 	buildDescription += "Targets: \n"
 
 	for (targetSetting in game.targets) 
@@ -156,11 +130,18 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		
 
 		//Clean out the folder
-		dir(path: "${env.PROJECT_PATH}/${projectFolder}")
+		dir(path: "${projectPath}/${projectFolder}")
 		{
-			//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
-			runShell("git clean -d -f")
-			runShell("git submodule foreach --recursive git clean -xfd")
+			if (sourceControl == SCM_GIT)
+			{
+				//Cleans any unknown files (not ignored ones. use -x to clean ignored files too.)
+				runShell("git clean -d -f")
+				runShell("git submodule foreach --recursive git clean -xfd")
+			}
+			else if (sourceControl == SCM_PLASTIC)
+			{
+				echo runShell("cm undo -r")
+			}
 		}
 
 
@@ -237,7 +218,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			
 			echo e.toString()  
 
-			buildResultString = "FAILED IN CATCH"
+			buildResultString = "Failed in catch"
 		}
 
 
