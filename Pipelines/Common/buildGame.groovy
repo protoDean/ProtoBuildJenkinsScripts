@@ -58,7 +58,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	final ARCHIVE_POST_FIX = "_Archive"
 
-	def wereFailures = false;
+	def wereFailures = false
 	
 	def buildDescription = "Building ${projectFolder} at branch ${sourceBranch} with ${paramUnityVersion}"
 
@@ -76,8 +76,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 				usernameVariable: 'credUser', passwordVariable: 'credPassword']]) 
 			{
 
-				echo runShell("git version");
-				echo runShell("which git");
+				echo runShell("git version")
+				echo runShell("which git")
 				
 				echo runShell("security -v unlock-keychain -p ${credPassword} ${KEYCHAIN_ID}")
 				
@@ -104,15 +104,15 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		{
 			//Make sure no changes, else switch will fail.
 			echo runShell("cm undo -r")
-			echo runShell("cm switch ${sourceBranch}");
-			echo runShell("cm update");
+			echo runShell("cm switch ${sourceBranch}")
+			echo runShell("cm update")
 
-			currentRevision = runShell("cm status --cset");
-			infoLastCommit = "Dont know how got get the comment in plastic. For now \n" + currentRevision;
+			currentRevision = runShell("cm status --cset")
+			infoLastCommit = "Dont know how got get the comment in plastic. For now \n" + currentRevision
 		}
 	}
 
-	def lastBuildNumber = null;
+	def lastBuildNumber = null
 	buildDescription += "Targets: \n"
 
 	for (targetSetting in game.targets) 
@@ -122,7 +122,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		if(targetSetting.disable || game.disable )
 		{
 			print "Skipping " + game.projectName + " " + TARGET_ID + " - Disabled"
-			continue;
+			continue
 		}
 
 		print "Doing " + game.projectName + " " + TARGET_ID
@@ -156,8 +156,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			return
 		}
 
-		//print("Skipping the rest for now");
-		//return;
+		//print("Skipping the rest for now")
+		//return
 
 		buildDescription += TARGET_ID + ":"
 
@@ -198,10 +198,10 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 						
 					lastBuildNumber = "" + finalBuildResult.number
 
-					def envVariables = finalBuildResult.getBuildVariables();
+					def envVariables = finalBuildResult.getBuildVariables()
 					//print "${j1EnvVariables}" 
 
-					buildId = envVariables.unityBuildId;
+					buildId = envVariables.unityBuildId
 
 					if(target == TARGET_ANDROID)
 					{
@@ -326,7 +326,7 @@ def GetGameResults( gameToGet ,  results)
 		if(game.projectName == gameToGet.projectName &&
 			game.paramUnityVersion == gameToGet.paramUnityVersion)
 			{
-				return game;
+				return game
 			}
 
 	}
@@ -349,7 +349,7 @@ def GetTargetResults( String targetId ,  gameResults)
 	
 		if(target.id == targetId)
 		{
-			return target;
+			return target
 		}
 	}
 
