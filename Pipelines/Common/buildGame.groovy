@@ -293,11 +293,11 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 def runShell(String command){
 
-    def responseCode = sh returnStatus: true, script: "${command} &> tmp.txt" 
+    def responseCode = sh returnStatus: true, script: "${command} &> ../tmp.txt" 
 
 	def output = ""
 	try{
-    	output =  readFile(file: "tmp.txt")
+    	output =  readFile(file: "../tmp.txt")
 	}
 	catch(e)
 	{
