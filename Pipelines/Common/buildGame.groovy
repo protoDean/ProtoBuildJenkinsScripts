@@ -104,7 +104,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		{
 			//Make sure no changes, else switch will fail.
 			echo runShell("cm undo -r")
-			echo runShell("cm switch ${sourceBranch}")
+			echo runShell("cm switch \"${sourceBranch}\"")
 			echo runShell("cm update")
 
 			currentRevision = runShell("cm status --cset")
