@@ -8,7 +8,14 @@ def GetUniqueTargetId( targetSetting)
 
 def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) {
     
-	String projectFolder = game.projectName 
+	String projectName = game.projectName
+	String projectFolder = game.projectFolder 
+
+	if(projectFolder == null || projectFolder == "")
+	{
+		projectFolder = projectName
+	}
+
 	String sourceBranch = game.sourceBranch  
 	String paramUnityVersion = game.unityVersion
 
@@ -60,7 +67,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 	def wereFailures = false
 	
-	def buildDescription = "Building ${projectFolder} at branch ${sourceBranch} with ${paramUnityVersion}"
+	def buildDescription = "Building ${projectName} in ${projectFolder} at branch ${sourceBranch} with ${paramUnityVersion}"
+	currentBuild.description = buildDescription
 
 	final NO_CHANGES_FOUND = "no changes found"
 
@@ -84,7 +92,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 				String gitResult = ""
 
 				runShell("git lfs install")
-				runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectFolder} +refs/heads/*:refs/remotes/origin/*")
+				runShell("git fetch --tags --force https://${JENKINS_GITHUB_USER}@github.com/protoDean/${projectName} +refs/heads/*:refs/remotes/origin/*")
 				runShell("git checkout -f -B ${sourceBranch} origin/${sourceBranch}")
 				runShell("git lfs fetch")
 				runShell("git lfs checkout")
@@ -152,7 +160,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			gameTargetResult.changeSet == currentRevision && 
 			gameTargetResult.targetId == TARGET_ID)
 		{
-			print "Build Skipping " + projectFolder + " " + target + " - No Changes required."
+			print "Build Skipping " + projectName + " " + target + " - No Changes required."
 			return
 		}
 
@@ -184,7 +192,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		try
 		{
 			
-			stage( projectFolder + "-" +  targetSetting.buildProfile) {
+			stage( projectName + "-" +  targetSetting.buildProfile) {
 				timeout(timeoutMins) 
 				{
 					def buildParams = commonParams 
@@ -268,7 +276,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			}
 			else if(target == TARGET_IOS)
 			{
-				stage(projectFolder + "-Upload") 
+				stage(projectName + "-Upload") 
 				{
 					try
 					{
