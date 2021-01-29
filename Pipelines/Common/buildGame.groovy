@@ -263,8 +263,8 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 				if(target == TARGET_ANDROID)
 				{
 					archivePath = "${buildPath}/${buildId}"
-					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-					sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+					echo runShell("mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}")
+					echo runShell("cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/")
 				}
 				else if(target == TARGET_IOS)
 				{
