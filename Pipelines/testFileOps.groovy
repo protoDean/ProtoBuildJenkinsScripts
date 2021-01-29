@@ -15,7 +15,7 @@ node {
 		def projectFolder = env.projectFolder
 		def sourceBranch = env.sourceBranch
 
-			archivePath = "${buildPath}/${buildId}"
+			
 			echo runShell("mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/TestFileOps")
 			echo runShell("cp -r ${targetFile} ${OUTPUT_PATH_DAILY_BUILDS}/TestFileOps/")
 	
