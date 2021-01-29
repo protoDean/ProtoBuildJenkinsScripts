@@ -103,7 +103,7 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 
 				echo "Most recent commit: \n" + infoLastCommit
 
-				buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
+				
 				
 				currentRevision = runShell("git -C ${projectPath}/${projectFolder} rev-parse HEAD").trim()
 			}
@@ -116,12 +116,17 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 			echo runShell("cm update")
 
 			currentRevision = runShell("cm status --cset")
-			infoLastCommit = "Dont know how got get the comment in plastic. For now \n" + currentRevision
+			infoLastCommit = currentRevision 
 		}
 	}
 
+	buildDescription += "\nLast Commit: " + infoLastCommit + "\n\n"
+
+
 	def lastBuildNumber = null
 	buildDescription += "Targets: \n"
+
+	currentBuild.description = buildDescription
 
 	for (targetSetting in game.targets) 
 	{	
@@ -245,26 +250,41 @@ def DoGamePlatform(game , boolean alwaysBuild , gameResult , dailyBuildFolder ) 
 		
 
 		buildDescription += gameTargetResult.lastBuildResult + "\n"
+		currentBuild.description = buildDescription
 		
+			
 		//Post Build Tasks.
 		if(targetSetting.postBuild.indexOf(POST_BUILD_COPY_TO_NETWORK) != -1)
 		{
-			//If successful we want to stash the build artifact somewhere
-			if(target == TARGET_ANDROID)
+			
+			try
 			{
-				archivePath = "${buildPath}/${buildId}"
-				sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
-				sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+				//If successful we want to stash the build artifact somewhere
+				if(target == TARGET_ANDROID)
+				{
+					archivePath = "${buildPath}/${buildId}"
+					sh "mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}"
+					sh "cp -r ${archivePath} ${OUTPUT_PATH_DAILY_BUILDS}/${dailyBuildFolder}/"
+				}
+				else if(target == TARGET_IOS)
+				{
+					//Removed archiving for now.
+					//xCodePath = "${buildPath}/${buildId}"
+					//archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
+					//iOS - archive it.
+					//sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${buildId}.xcarchive -configuration Release -scheme Unity-iPhone"
+				}
 			}
-			else if(target == TARGET_IOS)
-			{
-				//Removed archiving for now.
-				//xCodePath = "${buildPath}/${buildId}"
-				//archivePath = "${xCodePath}${ARCHIVE_POST_FIX}"
-				//iOS - archive it.
-				//sh "xcodebuild -project ${xCodePath}/Unity-iPhone.xcodeproj archive -archivePath ${archivePath}/${buildId}.xcarchive -configuration Release -scheme Unity-iPhone"
+			catch(e) {
+			//This try catch doesnt seem to work.
+				wereFailures = true
+				
+				echo "Failed Post Build \n" + e.toString()  
+
+				buildResultString = "Failed Copy to network"
 			}
 		}
+
 
 
 		if(targetSetting.postBuild.indexOf(POST_BUILD_UPLOAD) != -1)
