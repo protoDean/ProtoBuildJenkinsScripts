@@ -10,7 +10,7 @@ node {
 
 	def targetFile = env.targetFile
     
-   	dir(path: "${env.PROJECT_PATH}/TestFileOps")
+   	dir(path: "${env.PROJECT_PATH_PLASTIC}/TestFileOps")
 	{
 		def projectFolder = env.projectFolder
 		def sourceBranch = env.sourceBranch
