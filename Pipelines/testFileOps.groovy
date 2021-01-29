@@ -7,15 +7,17 @@ import groovy.json.JsonSlurperClassic
 node {
     print currentBuild.getStartTimeInMillis() 
     print currentBuild.number
+
+	def targetFile = env.targetFile
     
-   	dir(path: "${env.PROJECT_PATH}/MakeDirTest")
+   	dir(path: "${env.PROJECT_PATH}/TestFileOps")
 	{
 		def projectFolder = env.projectFolder
 		def sourceBranch = env.sourceBranch
 
 			archivePath = "${buildPath}/${buildId}"
-			echo runShell("mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/MakeDirTest")
-			echo runShell("cp -r testFile.txt ${OUTPUT_PATH_DAILY_BUILDS}/MakeDirTest/")
+			echo runShell("mkdir -p ${OUTPUT_PATH_DAILY_BUILDS}/TestFileOps")
+			echo runShell("cp -r ${targetFile} ${OUTPUT_PATH_DAILY_BUILDS}/TestFileOps/")
 	
 	}
 
