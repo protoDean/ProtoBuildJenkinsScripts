@@ -904,10 +904,10 @@ PlayerSettings:
 	{
 		print "exists"
 		
-		readYaml (file: 'testFile.txt') 
+		
 
 
-		def yamlConfig = new YamlSlurper().parseText(TEST_YAML)
+		def yamlConfig = readYaml (text: TEST_YAML) 
 
 		echo "Test Yaml (Should be frAQBc8Wsa1xVPfvJcrgRYwTiizs2trQ)" + yamlConfig.PlayerSettings.ps4Passcode;
 
