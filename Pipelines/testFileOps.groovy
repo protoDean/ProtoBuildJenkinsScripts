@@ -901,20 +901,10 @@ PlayerSettings:
 
 	def buildResults = null
 	
-	{
-		print "exists"
-		
-		
-
-
-		def yamlConfig = readYaml (text: TEST_YAML) 
-
-		echo "Test Yaml (Should be frAQBc8Wsa1xVPfvJcrgRYwTiizs2trQ)" + yamlConfig.PlayerSettings.ps4Passcode;
-
-
-	}
 	
-
+	print "exists"
+	def yamlConfig = readYaml (text: TEST_YAML) 
+	echo "Test Yaml (Should be frAQBc8Wsa1xVPfvJcrgRYwTiizs2trQ)" + yamlConfig.PlayerSettings.ps4Passcode;
 
     
    	dir(path: "${env.PROJECT_PATH_PLASTIC}/TestFileOps")
