@@ -910,10 +910,7 @@ PlayerSettings:
 
 
 	}
-	else
-	{
-		buildResults = [ games: [] ]
-	}
+	
 
 
     
