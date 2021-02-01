@@ -13,7 +13,7 @@ node {
 	
 	echo "test YamlSlurper"
 
-	final String TEST_YAML = def configYaml = '''\
+	final String TEST_YAML = '''\
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!129 &1
