@@ -903,6 +903,9 @@ PlayerSettings:
 	
 	{
 		print "exists"
+		
+		readYaml (file: 'testFile.txt') 
+
 
 		def yamlConfig = new YamlSlurper().parseText(TEST_YAML)
 
